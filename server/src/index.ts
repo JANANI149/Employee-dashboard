@@ -15,7 +15,10 @@ import auditLogs from "./routes/auditLogs.js";
 
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGIN ?? "https://bugspacepro.netlify.app",
+  credentials: true,
+}));
 app.use(express.json());
 
 // ── Uptime check (public) ──────────────────────────────────────────────────
