@@ -16,7 +16,9 @@ import type { User as FirebaseUser } from "firebase/auth";
 import { signInWithGoogle, signInWithEmail, signOut, onAuthChange, getIdToken } from "@/lib/googleAuth";
 import type { User } from "@/types";
 import { api } from "@/services/api";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { doc, getDoc, collection, query, where, limit, getDocs } from "firebase/firestore";
+
 
 interface AuthState {
   /** Firebase identity — set immediately on sign-in. */
@@ -140,25 +142,33 @@ export const useAuth = create<AuthState>()((set) => ({
 
       // Fallback: read role directly from Firestore if backend is unavailable (e.g. cold start)
       try {
-        const db = getFirestore();
-        const userDoc = await getDoc(doc(db, "users", fbUser.uid));
-        if (userDoc.exists()) {
-          const data = userDoc.data();
-          if (data.role && data.status !== "inactive") {
-            const fallbackUser: User = {
-              id: fbUser.uid,
-              email: fbUser.email ?? "",
-              name: fbUser.displayName ?? data.name ?? "",
-              role: data.role,
-              orgId: data.orgId ?? "org-1",
-              status: data.status ?? "active",
-            };
-            if (typeof window !== "undefined") {
-              localStorage.setItem("bp_orgId", fallbackUser.orgId);
-            }
-            set({ appUser: fallbackUser, loading: false, error: null });
-            return;
+        // 1st attempt: look up by Firebase UID (document ID)
+        let userDocData: any = null;
+        const byId = await getDoc(doc(db, "users", fbUser.uid));
+        if (byId.exists()) {
+          userDocData = byId.data();
+        } else if (fbUser.email) {
+          // 2nd attempt: query by email (UID may differ from doc ID in seeded data)
+          const q = query(collection(db, "users"), where("email", "==", fbUser.email), limit(1));
+          const snap = await getDocs(q);
+          if (!snap.empty) userDocData = snap.docs[0].data();
+        }
+
+        if (userDocData && userDocData.role && userDocData.status !== "inactive") {
+          const fallbackUser: User = {
+            id: fbUser.uid,
+            email: fbUser.email ?? "",
+            name: fbUser.displayName ?? userDocData.name ?? "",
+            role: userDocData.role,
+            orgId: userDocData.orgId ?? "org-1",
+            status: userDocData.status ?? "active",
+          };
+          if (typeof window !== "undefined") {
+            localStorage.setItem("bp_orgId", fallbackUser.orgId);
           }
+          console.log("[Auth] Firestore fallback succeeded, role:", fallbackUser.role);
+          set({ appUser: fallbackUser, loading: false, error: null });
+          return;
         }
       } catch (firestoreErr) {
         console.error("[Auth] Firestore fallback also failed:", firestoreErr);
