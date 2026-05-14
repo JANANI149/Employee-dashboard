@@ -43,66 +43,76 @@ function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-blue-50 p-6 relative">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-purple-50/30 p-6 relative">
+      {/* Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 right-20 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 left-20 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl"></div>
+      </div>
+
       {/* Back to Landing Page - Top Left */}
-      <div className="absolute top-6 left-6">
+      <div className="absolute top-6 left-6 z-10">
         <Link to="/landing">
-          <Button variant="ghost" className="gap-2 text-gray-600 hover:text-gray-900">
+          <Button variant="ghost" className="gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100">
             <ArrowLeft className="h-4 w-4" />
             Back to Landing Page
           </Button>
         </Link>
       </div>
 
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md relative z-10">
         {/* Logo */}
-        <div className="flex items-center gap-2 mb-8 justify-center">
-          <Shield className="h-8 w-8 text-purple-600" />
+        <div className="flex items-center gap-3 mb-8 justify-center">
+          <div className="relative">
+            <div className="absolute inset-0 bg-slate-900 blur-lg opacity-20 rounded-full"></div>
+            <Shield className="h-8 w-8 text-slate-900 relative" strokeWidth={2.5} />
+          </div>
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-              BUGSPACE <span className="text-purple-600">PRO</span>
+            <h1 className="text-3xl font-bold tracking-tight">
+              <span className="text-slate-900">Bugspace</span>
+              <span className="text-purple-600">Pro</span>
             </h1>
-            <p className="text-xs text-purple-600 font-medium">Administrator Access</p>
+            <p className="text-xs text-slate-600 font-medium">Administrator Portal</p>
           </div>
         </div>
 
         {/* Card */}
-        <div className="bg-white border border-purple-200 rounded-xl p-8 shadow-xl">
+        <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-2xl">
           <div className="flex items-center gap-2 mb-6 justify-center">
-            <ShieldAlert className="h-6 w-6 text-purple-600" />
-            <h2 className="text-xl font-semibold text-gray-900">Admin Sign In</h2>
+            <ShieldAlert className="h-6 w-6 text-slate-900" />
+            <h2 className="text-2xl font-bold text-slate-900">Admin Access</h2>
           </div>
           
-          <p className="text-sm text-gray-600 mb-8 text-center">
+          <p className="text-sm text-slate-600 mb-8 text-center">
             This portal is restricted to system administrators only.
-            Enter your admin credentials to continue.
+            Enter your credentials to continue.
           </p>
 
           {/* Error state */}
           {error && (
-            <div className="mb-4 rounded-md bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+            <div className="mb-6 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
               {error}
             </div>
           )}
 
           {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-700">Email</Label>
+              <Label htmlFor="email" className="text-slate-700 font-medium">Email Address</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="admin@gmail.com"
+                placeholder="admin@bugspace.io"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isSubmitting || loading}
                 required
-                className="bg-gray-50 border-gray-300 text-gray-900 placeholder:text-gray-400"
+                className="bg-slate-50 border-slate-300 text-slate-900 placeholder:text-slate-400 h-11"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-gray-700">Password</Label>
+              <Label htmlFor="password" className="text-slate-700 font-medium">Password</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -112,12 +122,12 @@ function AdminLoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isSubmitting || loading}
                   required
-                  className="bg-gray-50 border-gray-300 text-gray-900 placeholder:text-gray-400 pr-10"
+                  className="bg-slate-50 border-slate-300 text-slate-900 placeholder:text-slate-400 pr-10 h-11"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                   tabIndex={-1}
                 >
                   {showPassword ? (
@@ -131,12 +141,12 @@ function AdminLoginPage() {
 
             <Button
               type="submit"
-              className="w-full gap-2 bg-purple-600 hover:bg-purple-700 text-white"
+              className="w-full gap-2 bg-slate-900 hover:bg-slate-800 text-white h-12 shadow-lg shadow-slate-900/20"
               disabled={isSubmitting || loading || !email || !password}
             >
               {isSubmitting || loading ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="h-5 w-5 animate-spin" />
                   Authenticating…
                 </>
               ) : (
@@ -145,9 +155,9 @@ function AdminLoginPage() {
             </Button>
           </form>
 
-          <div className="mt-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
-            <p className="text-xs text-gray-600 text-center">
-              <span className="text-purple-600 font-medium">Security Notice:</span> All admin access attempts are logged and monitored.
+          <div className="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+            <p className="text-xs text-slate-600 text-center">
+              <span className="text-slate-900 font-semibold">Security Notice:</span> All admin access attempts are logged and monitored.
               Unauthorized access is prohibited.
             </p>
           </div>
@@ -155,9 +165,9 @@ function AdminLoginPage() {
 
         {/* Back to main login */}
         <div className="mt-6 text-center">
-          <a href="/login" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+          <Link to="/login" className="text-sm text-slate-600 hover:text-slate-900 transition-colors font-medium">
             Regular user login →
-          </a>
+          </Link>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useAuth } from "@/store/auth";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, ShieldAlert, LogOut } from "lucide-react";
 import type { Role } from "@/types";
 
 const navByRole: Record<Role, { to: string; label: string }[]> = {
@@ -44,8 +44,8 @@ export function AppLayout() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-purple-50/30">
+        <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
       </div>
     );
   }
@@ -60,19 +60,28 @@ export function AppLayout() {
   };
 
   return (
-    <div className="min-h-screen flex bg-white text-foreground">
-      <aside className="w-60 bg-black border-r border-gray-800 p-4 flex flex-col gap-2">
-        <div className="text-lg font-semibold mb-4 text-white">
-          BUGSPACE <span className="text-purple-500">PRO</span>
+    <div className="min-h-screen flex bg-gradient-to-br from-slate-50 via-white to-purple-50/30">
+      <aside className="w-64 bg-slate-900 border-r border-slate-800 p-6 flex flex-col gap-6">
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <div className="absolute inset-0 bg-purple-600 blur-lg opacity-20 rounded-full"></div>
+            <ShieldAlert className="h-7 w-7 text-purple-400 relative" strokeWidth={2.5} />
+          </div>
+          <div className="text-xl font-bold tracking-tight">
+            <span className="text-white">Bugspace</span>
+            <span className="text-purple-400">Pro</span>
+          </div>
         </div>
-        <nav className="flex flex-col gap-1">
+        <nav className="flex flex-col gap-2">
           {items.map((it) => (
             <Link
               key={it.to}
               to={it.to}
               className={cn(
-                "px-3 py-2 rounded-md text-sm text-gray-300 hover:bg-purple-600 hover:text-white transition-colors",
-                location.pathname === it.to && "bg-purple-600 text-white font-medium"
+                "px-4 py-2.5 rounded-lg text-sm font-medium transition-all",
+                location.pathname === it.to 
+                  ? "bg-purple-600 text-white shadow-lg shadow-purple-600/20" 
+                  : "text-slate-300 hover:bg-slate-800 hover:text-white"
               )}
             >
               {it.label}
@@ -81,16 +90,29 @@ export function AppLayout() {
         </nav>
       </aside>
       <div className="flex-1 flex flex-col">
-        <header className="h-14 border-b border-gray-200 flex items-center justify-between px-6 bg-white">
-          <div className="text-sm text-gray-600 capitalize">{appUser.role}</div>
+        <header className="h-16 border-b border-slate-200 flex items-center justify-between px-8 bg-white/80 backdrop-blur-md">
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-900">{appUser.name}</span>
-            <Button size="sm" variant="ghost" onClick={handleLogout} className="text-gray-700 hover:text-gray-900">
+            <div className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold uppercase tracking-wide">
+              {appUser.role}
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <div className="text-sm font-medium text-slate-900">{appUser.name}</div>
+              <div className="text-xs text-slate-500">{appUser.email}</div>
+            </div>
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              onClick={handleLogout} 
+              className="text-slate-600 hover:text-slate-900 hover:bg-slate-100 gap-2"
+            >
+              <LogOut className="h-4 w-4" />
               Logout
             </Button>
           </div>
         </header>
-        <main className="flex-1 p-6 bg-gray-50">
+        <main className="flex-1 p-8 overflow-auto">
           <Outlet />
         </main>
       </div>

@@ -10,6 +10,7 @@
  */
 import axios from "axios";
 import { getIdToken } from "@/lib/googleAuth";
+import { useAuth } from "@/store/auth";
 
 export const api = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL ?? ""}/api`,
@@ -23,11 +24,10 @@ api.interceptors.request.use(async (config) => {
   const token = await getIdToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-    // Keep localStorage in sync so that non-interceptor code can read it.
-    localStorage.setItem("bp_token", token);
   }
 
-  const orgId = localStorage.getItem("bp_orgId");
+  // Get orgId from auth store
+  const orgId = useAuth.getState().appUser?.orgId;
   if (orgId) config.headers["x-org-id"] = orgId;
 
   return config;
@@ -37,10 +37,9 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid — clear storage and redirect to login.
+      // Token expired or invalid — clear store and redirect to login.
       if (typeof window !== "undefined") {
-        localStorage.removeItem("bp_token");
-        localStorage.removeItem("bp_orgId");
+        useAuth.getState().signOut();
         window.location.href = "/login";
       }
     }

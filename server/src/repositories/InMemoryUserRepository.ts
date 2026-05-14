@@ -57,6 +57,20 @@ export class InMemoryUserRepository implements IUserRepository {
     return user;
   }
 
+  async updateStatus(orgId: string, userId: string, status: "active" | "inactive") {
+    const user = db.find((u) => u.id === userId && u.orgId === orgId);
+    if (!user) return null;
+    user.status = status;
+    return user;
+  }
+
+  async remove(orgId: string, userId: string) {
+    const index = db.findIndex((u) => u.id === userId && u.orgId === orgId);
+    if (index === -1) return false;
+    db.splice(index, 1);
+    return true;
+  }
+
   async create(input: Omit<User, "id" | "createdAt"> & { id?: string }) {
     const user: User = {
       ...input,

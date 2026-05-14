@@ -16,7 +16,11 @@ import auditLogs from "./routes/auditLogs.js";
 
 const app = express();
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGIN ?? "https://bugspacepro.netlify.app",
+  origin: [
+    process.env.ALLOWED_ORIGIN ?? "https://bugspacepro.netlify.app",
+    "http://localhost:5173",
+    "http://localhost:3000"
+  ],
   credentials: true,
 }));
 app.use(express.json());

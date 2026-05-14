@@ -88,10 +88,6 @@ export const useAuth = create<AuthState>()((set) => ({
     set({ loading: true, error: null });
     try {
       await signOut();
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("bp_token");
-        localStorage.removeItem("bp_orgId");
-      }
       set({ firebaseUser: null, appUser: null, loading: false });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Sign-out failed";
@@ -108,26 +104,13 @@ export const useAuth = create<AuthState>()((set) => ({
     set({ firebaseUser: fbUser, loading: true });
 
     try {
-      // Get a fresh Firebase ID token and store it for the axios interceptor.
+      // Get a fresh Firebase ID token.
       const idToken = await getIdToken();
-      if (typeof window !== "undefined" && idToken) {
-        localStorage.setItem("bp_token", idToken);
-      }
 
       // Call backend to get (or create) the app-level user record.
       // The backend verifies the Firebase token and returns { user } with role + orgId.
       const { data } = await api.post<{ user: User }>("/auth/login", { idToken });
       const appUser = data.user;
-
-      // ALWAYS set orgId in localStorage, even if user has no role
-      if (typeof window !== "undefined") {
-        if (appUser.orgId) {
-          localStorage.setItem("bp_orgId", appUser.orgId);
-        } else {
-          // Fallback to org-1 if no orgId returned
-          localStorage.setItem("bp_orgId", "org-1");
-        }
-      }
 
       // If user has no role or status is inactive, they need approval
       if (!appUser.role || appUser.status === "inactive") {
@@ -163,9 +146,6 @@ export const useAuth = create<AuthState>()((set) => ({
             orgId: userDocData.orgId ?? "org-1",
             status: userDocData.status ?? "active",
           };
-          if (typeof window !== "undefined") {
-            localStorage.setItem("bp_orgId", fallbackUser.orgId);
-          }
           console.log("[Auth] Firestore fallback succeeded, role:", fallbackUser.role);
           set({ appUser: fallbackUser, loading: false, error: null });
           return;

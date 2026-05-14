@@ -26,58 +26,77 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6 relative">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-purple-50/30 p-6 relative">
+      {/* Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 right-20 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 left-20 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl"></div>
+      </div>
+
       {/* Back to Landing Page - Top Left */}
-      <div className="absolute top-6 left-6">
+      <div className="absolute top-6 left-6 z-10">
         <Link to="/landing">
-          <Button variant="ghost" className="gap-2 text-gray-600 hover:text-gray-900">
+          <Button variant="ghost" className="gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100">
             <ArrowLeft className="h-4 w-4" />
             Back to Landing Page
           </Button>
         </Link>
       </div>
 
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-md relative z-10">
 
         {/* Logo */}
-        <div className="flex items-center gap-2 mb-8 justify-center">
-          <ShieldAlert className="h-7 w-7 text-purple-600" />
-          <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-            BUGSPACE <span className="text-purple-600">PRO</span>
+        <div className="flex items-center gap-3 mb-8 justify-center">
+          <div className="relative">
+            <div className="absolute inset-0 bg-purple-600 blur-lg opacity-20 rounded-full"></div>
+            <ShieldAlert className="h-8 w-8 text-purple-600 relative" strokeWidth={2.5} />
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            <span className="text-slate-900">Bugspace</span>
+            <span className="text-purple-600">Pro</span>
           </h1>
         </div>
 
         {/* Card */}
-        <div className="bg-white border border-gray-200 rounded-xl p-8 shadow-lg">
-          <h2 className="text-xl font-semibold mb-1 text-gray-900">Sign in</h2>
-          <p className="text-sm text-gray-600 mb-8">
-            Use your organisation Google account to continue.
+        <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-2xl">
+          <h2 className="text-2xl font-bold mb-2 text-slate-900">Welcome back</h2>
+          <p className="text-sm text-slate-600 mb-8">
+            Sign in with your organization Google account to continue.
           </p>
 
           {/* Error state */}
           {error && (
-            <div className="mb-4 rounded-md bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+            <div className="mb-6 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
               {error}
             </div>
           )}
 
           {/* Google Sign-In button */}
           <Button
-            className="w-full gap-2 bg-purple-600 hover:bg-purple-700 text-white"
+            className="w-full gap-2 bg-slate-900 hover:bg-slate-800 text-white h-12 shadow-lg shadow-slate-900/20"
             onClick={handleGoogleSignIn}
             disabled={loading}
           >
             {loading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="h-5 w-5 animate-spin" />
             ) : (
-              <Chrome className="h-4 w-4" />
+              <Chrome className="h-5 w-5" />
             )}
             {loading ? "Signing in…" : "Continue with Google"}
           </Button>
 
-          <p className="mt-6 text-center text-xs text-gray-500">
-            Access is restricted to authorised organisation members.
-          </p>
+          <div className="mt-8 pt-6 border-t border-slate-200">
+            <p className="text-center text-xs text-slate-500">
+              Access is restricted to authorized organization members.
+            </p>
+          </div>
+        </div>
+
+        {/* Admin Login Link */}
+        <div className="mt-6 text-center">
+          <Link to="/admin-login" className="text-sm text-slate-600 hover:text-slate-900 transition-colors font-medium">
+            Administrator? Sign in here →
+          </Link>
         </div>
       </div>
     </div>
