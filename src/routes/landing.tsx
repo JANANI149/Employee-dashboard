@@ -137,109 +137,79 @@ function LandingPage() {
               </div>
             </div>
 
-            {/* Right Content - Enhanced Dashboard Preview */}
-            <div className="relative lg:ml-8">
-              {/* Floating Cards */}
-              <div className="absolute -top-6 -left-6 z-10">
-                <div className="bg-white rounded-xl shadow-2xl border border-slate-200 p-3 w-56">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center">
-                      <AlertTriangle className="h-4 w-4 text-red-600" />
+            {/* Right Content - Clean High-Fidelity UI Match */}
+            <div className="relative flex items-center justify-center lg:justify-end min-h-[500px]">
+              {/* Subtle background glow */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+              <div className="relative z-20 w-full max-w-[500px]">
+                {/* Main Dashboard Card */}
+                <div className="relative bg-white rounded-3xl p-6 border border-slate-200 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] z-10">
+                  {/* Header */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center">
+                        <Activity className="h-5 w-5 text-purple-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-bold text-slate-900">Program Overview</h3>
+                        <p className="text-xs text-slate-500">Live vulnerability feeds</p>
+                      </div>
+                    </div>
+                    <span className="px-3 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-full flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                      ACTIVE
+                    </span>
+                  </div>
+
+                  {/* Stats Row */}
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                      <div className="text-xs font-medium text-slate-500 mb-1">Reports Triaged</div>
+                      <div className="text-2xl font-black text-slate-900">1,204</div>
+                    </div>
+                    <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                      <div className="text-xs font-medium text-slate-500 mb-1">Avg Response</div>
+                      <div className="text-2xl font-black text-slate-900">1.2h</div>
+                    </div>
+                  </div>
+
+                  {/* List */}
+                  <div className="space-y-3">
+                    <div className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">Recent Submissions</div>
+                    {[
+                      { id: "#892", title: "Stored XSS in Comment Field", user: "@hunter_x", severity: "High", color: "text-orange-600 bg-orange-100" },
+                      { id: "#891", title: "IDOR on User Settings", user: "@sec_ninja", severity: "Medium", color: "text-yellow-600 bg-yellow-100" },
+                    ].map((report, idx) => (
+                      <div key={idx} className="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-xl shadow-sm hover:border-purple-200 transition-colors cursor-pointer">
+                        <div className="flex items-center gap-3">
+                          <div className="text-[10px] font-bold text-slate-400">{report.id}</div>
+                          <div>
+                            <div className="text-xs font-bold text-slate-900">{report.title}</div>
+                            <div className="text-[10px] text-slate-500">{report.user}</div>
+                          </div>
+                        </div>
+                        <span className={`text-[10px] font-bold px-2 py-1 rounded-md ${report.color}`}>
+                          {report.severity}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Floating Element: Alert Notification (Bottom Left) */}
+                <div className="absolute -bottom-6 -left-10 z-20 animate-float-delayed">
+                  <div className="bg-white rounded-xl p-4 shadow-xl border border-slate-200 flex items-center gap-3 w-64">
+                    <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+                      <ShieldAlert className="h-4 w-4 text-red-600" />
                     </div>
                     <div>
-                      <div className="text-xs text-slate-500">Critical Alert</div>
-                      <div className="text-sm font-semibold text-slate-900">SQL Injection</div>
-                    </div>
-                  </div>
-                  <div className="text-xs text-slate-600">Detected in payment gateway</div>
-                  <div className="mt-2 flex items-center justify-between">
-                    <span className="text-xs text-slate-500">2 min ago</span>
-                    <span className="text-xs font-medium text-red-600">High Priority</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="absolute -bottom-6 -right-6 z-10">
-                <div className="bg-white rounded-xl shadow-2xl border border-slate-200 p-3 w-48">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    </div>
-                    <div>
-                      <div className="text-xs text-slate-500">Resolved</div>
-                      <div className="text-sm font-semibold text-slate-900">23 Issues</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="flex-1 bg-slate-100 rounded-full h-1.5">
-                      <div className="bg-green-500 h-1.5 rounded-full" style={{width: '78%'}}></div>
-                    </div>
-                    <span className="text-xs font-medium text-slate-700">78%</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Main Dashboard */}
-              <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 p-6 relative">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-4 pb-4 border-b border-slate-200">
-                  <div>
-                    <h3 className="text-base font-bold text-slate-900">Security Dashboard</h3>
-                    <p className="text-xs text-slate-500 mt-1">Real-time vulnerability tracking</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-full bg-purple-100 flex items-center justify-center">
-                      <Eye className="h-3.5 w-3.5 text-purple-600" />
+                      <div className="text-[11px] font-bold text-slate-900">Critical Vulnerability Verified</div>
+                      <div className="text-[10px] text-slate-500">Bounty awarded to @alex_h</div>
                     </div>
                   </div>
                 </div>
 
-                {/* Metrics Grid */}
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  <MetricCard 
-                    value="156" 
-                    label="Active Reports" 
-                    trend="+12%" 
-                    positive={true}
-                    icon={<FileText className="h-3.5 w-3.5" />}
-                  />
-                  <MetricCard 
-                    value="23" 
-                    label="Critical" 
-                    trend="+5" 
-                    positive={false}
-                    icon={<AlertTriangle className="h-3.5 w-3.5" />}
-                  />
-                  <MetricCard 
-                    value="87" 
-                    label="Researchers" 
-                    trend="+8%" 
-                    positive={true}
-                    icon={<Users className="h-3.5 w-3.5" />}
-                  />
-                  <MetricCard 
-                    value="4.2h" 
-                    label="Avg Response" 
-                    trend="-15%" 
-                    positive={true}
-                    icon={<Clock className="h-3.5 w-3.5" />}
-                  />
-                </div>
-
-                {/* Chart */}
-                <div className="bg-gradient-to-br from-slate-50 to-purple-50/30 rounded-xl p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-xs font-semibold text-slate-900">Severity Distribution</h4>
-                    <TrendingUp className="h-3.5 w-3.5 text-slate-400" />
-                  </div>
-                  <div className="h-24 flex items-end justify-between gap-2">
-                    <ChartBar height="85%" color="bg-red-500" label="Critical" />
-                    <ChartBar height="65%" color="bg-orange-500" label="High" />
-                    <ChartBar height="45%" color="bg-yellow-500" label="Medium" />
-                    <ChartBar height="30%" color="bg-blue-500" label="Low" />
-                    <ChartBar height="20%" color="bg-slate-400" label="Info" />
-                  </div>
-                </div>
               </div>
             </div>
           </div>
