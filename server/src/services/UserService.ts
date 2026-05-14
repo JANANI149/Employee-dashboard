@@ -22,4 +22,26 @@ export class UserService {
     }
     return this.repo.updateRole(orgId, targetUserId, role);
   }
+
+  /**
+   * Enable or disable a user account.
+   * Business rule: admin cannot deactivate themselves.
+   */
+  async updateStatus(orgId: string, targetUserId: string, status: "active" | "inactive", requesterId: string) {
+    if (targetUserId === requesterId) {
+      throw new Error("You cannot change your own account status.");
+    }
+    return this.repo.updateStatus(orgId, targetUserId, status);
+  }
+
+  /**
+   * Permanently remove a user from the org.
+   * Business rule: admin cannot delete themselves.
+   */
+  async remove(orgId: string, targetUserId: string, requesterId: string) {
+    if (targetUserId === requesterId) {
+      throw new Error("You cannot delete your own account.");
+    }
+    return this.repo.remove(orgId, targetUserId);
+  }
 }

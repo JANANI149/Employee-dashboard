@@ -16,7 +16,7 @@ import { RoleBadge } from "./RoleBadge";
 import { ConfirmModal } from "./ConfirmModal";
 import { useAuth } from "@/store/auth";
 import { Button } from "@/components/ui/button";
-import { Search, RefreshCw, Trash2, ShieldCheck } from "lucide-react";
+import { Search, RefreshCw, Trash2, ShieldCheck, Power } from "lucide-react";
 
 const ROLES: Role[] = ["admin", "manager", "researcher", "employee"];
 
@@ -39,6 +39,7 @@ export function UserManagementTable() {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [updatingRole, setUpdatingRole] = useState<string | null>(null);
+  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<User | null>(null);
   const [deleting, setDeleting] = useState(false);
 
@@ -66,6 +67,19 @@ export function UserManagementTable() {
       alert("Failed to update role.");
     } finally {
       setUpdatingRole(null);
+    }
+  };
+
+  const handleStatusToggle = async (user: User) => {
+    const newStatus = user.status === "inactive" ? "active" : "inactive";
+    setUpdatingStatus(user.id);
+    try {
+      const { data } = await api.patch<User>(`/users/${user.id}/status`, { status: newStatus });
+      setUsers((prev) => prev.map((u) => u.id === user.id ? data : u));
+    } catch {
+      alert("Failed to update user status.");
+    } finally {
+      setUpdatingStatus(null);
     }
   };
 
@@ -170,23 +184,38 @@ export function UserManagementTable() {
                 <td className="px-4 py-3 text-muted-foreground font-mono text-xs">{u.orgId}</td>
                 {/* Status */}
                 <td className="px-4 py-3">
-                  <span className={`inline-flex items-center gap-1.5 text-xs ${u.status === "suspended" ? "text-destructive" : "text-emerald-400"}`}>
-                    <span className={`h-1.5 w-1.5 rounded-full ${u.status === "suspended" ? "bg-destructive" : "bg-emerald-400"}`} />
+                  <span className={`inline-flex items-center gap-1.5 text-xs ${u.status === "inactive" ? "text-destructive" : "text-emerald-400"}`}>
+                    <span className={`h-1.5 w-1.5 rounded-full ${u.status === "inactive" ? "bg-destructive" : "bg-emerald-400"}`} />
                     {u.status ?? "active"}
                   </span>
                 </td>
                 {/* Actions */}
                 <td className="px-4 py-3 text-right">
                   {appUser?.role === "admin" && u.id !== appUser?.id && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setDeleteTarget(u)}
-                      className="text-destructive hover:text-destructive hover:bg-destructive/10 gap-1.5"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                      Remove
-                    </Button>
+                    <div className="flex items-center justify-end gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleStatusToggle(u)}
+                        disabled={updatingStatus === u.id}
+                        className={u.status === "inactive"
+                          ? "text-emerald-500 hover:text-emerald-500 hover:bg-emerald-500/10 gap-1.5"
+                          : "text-yellow-500 hover:text-yellow-500 hover:bg-yellow-500/10 gap-1.5"}
+                        title={u.status === "inactive" ? "Activate user" : "Deactivate user"}
+                      >
+                        <Power className="h-3.5 w-3.5" />
+                        {updatingStatus === u.id ? "..." : u.status === "inactive" ? "Enable" : "Disable"}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setDeleteTarget(u)}
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10 gap-1.5"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        Remove
+                      </Button>
+                    </div>
                   )}
                 </td>
               </tr>

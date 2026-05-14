@@ -57,6 +57,26 @@ export class FirestoreUserRepository implements IUserRepository {
     return { ...user, role, status: "active" };
   }
 
+  async updateStatus(orgId: string, userId: string, status: "active" | "inactive"): Promise<User | null> {
+    const docRef = usersCollection.doc(userId);
+    const doc = await docRef.get();
+    if (!doc.exists) return null;
+    const user = { id: doc.id, ...doc.data() } as User;
+    if (user.orgId !== orgId) return null;
+    await docRef.update({ status });
+    return { ...user, status };
+  }
+
+  async remove(orgId: string, userId: string): Promise<boolean> {
+    const docRef = usersCollection.doc(userId);
+    const doc = await docRef.get();
+    if (!doc.exists) return false;
+    const user = { id: doc.id, ...doc.data() } as User;
+    if (user.orgId !== orgId) return false;
+    await docRef.delete();
+    return true;
+  }
+
   async create(input: Omit<User, "createdAt"> & { createdAt?: string }): Promise<User> {
     const user: any = {
       ...input,

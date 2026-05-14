@@ -1,8 +1,10 @@
 import type { Request, Response } from "express";
 import { AuthService } from "../services/AuthService.js";
-import { userRepo } from "../repositories/index.js";
+import { AuditLogService } from "../services/AuditLogService.js";
+import { userRepo, auditLogRepo } from "../repositories/index.js";
 
 const service = new AuthService(userRepo);
+const auditService = new AuditLogService(auditLogRepo);
 
 export const AuthController = {
   /**
@@ -21,6 +23,15 @@ export const AuthController = {
     if (idToken && typeof idToken === "string") {
       try {
         const result = await service.loginWithFirebaseToken(idToken);
+        // Record login audit log (non-blocking)
+        auditService.log({
+          orgId: result.user.orgId,
+          actorId: result.user.id,
+          actorName: result.user.name,
+          action: "LOGIN",
+          targetType: "session",
+          targetId: result.user.id,
+        }).catch(() => {}); // fire-and-forget, don't fail login if audit fails
         return res.status(200).json(result);
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "Authentication failed";

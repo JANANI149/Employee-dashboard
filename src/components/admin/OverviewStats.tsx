@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Users, Building2, Target, FileText, AlertTriangle } from "lucide-react";
 import { userRepository } from "@/repositories/ApiUserRepository";
 import { organizationRepository } from "@/repositories/ApiOrganizationRepository";
+import { reportRepository } from "@/repositories/ApiReportRepository";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function OverviewStats() {
@@ -14,6 +15,19 @@ export function OverviewStats() {
     queryKey: ["organizations"],
     queryFn: () => organizationRepository.list(),
   });
+
+  const { data: reports, isLoading: reportsLoading } = useQuery({
+    queryKey: ["reports"],
+    queryFn: () => reportRepository.list(),
+  });
+
+  const openReports = reports?.filter(
+    (r) => !["Closed", "Duplicate"].includes(r.status)
+  ).length ?? 0;
+
+  const criticalIssues = reports?.filter(
+    (r) => r.severity === "critical" && !["Closed", "Duplicate"].includes(r.status)
+  ).length ?? 0;
 
   const stats = [
     {
@@ -34,7 +48,7 @@ export function OverviewStats() {
     },
     {
       title: "Active Programs",
-      value: 0, // Will be populated when programs are loaded
+      value: 0,
       icon: Target,
       color: "text-green-500",
       bgColor: "bg-green-500/10",
@@ -42,19 +56,19 @@ export function OverviewStats() {
     },
     {
       title: "Open Reports",
-      value: 0, // Will be populated when reports are loaded
+      value: openReports,
       icon: FileText,
       color: "text-yellow-500",
       bgColor: "bg-yellow-500/10",
-      loading: false,
+      loading: reportsLoading,
     },
     {
       title: "Critical Issues",
-      value: 0, // Will be populated when reports are loaded
+      value: criticalIssues,
       icon: AlertTriangle,
       color: "text-red-500",
       bgColor: "bg-red-500/10",
-      loading: false,
+      loading: reportsLoading,
     },
   ];
 

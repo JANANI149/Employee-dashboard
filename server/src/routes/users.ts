@@ -4,24 +4,16 @@ import { verifyRole } from "../middleware/verifyRole.js";
 
 const router = Router();
 
-/**
- * GET /api/users
- * Admin and manager only — lists all users in the requesting user's org.
- * (Previously unrestricted — now locked down per architecture review.)
- */
+/** GET /api/users — list all users in the org (admin + manager) */
 router.get("/", verifyRole("admin", "manager"), UserController.list);
 
-/**
- * PATCH /api/users/:id/role
- * Admin-only: update a specific user's role.
- * Body: { role: "admin" | "manager" | "researcher" | "employee" }
- */
+/** PATCH /api/users/:id/role — update a user's role (admin only) */
 router.patch("/:id/role", verifyRole("admin"), UserController.updateRole);
 
-/**
- * DELETE /api/users/:id
- * Admin-only: remove a user from the organization.
- */
+/** PATCH /api/users/:id/status — activate or deactivate a user (admin only) */
+router.patch("/:id/status", verifyRole("admin"), UserController.updateStatus);
+
+/** DELETE /api/users/:id — permanently remove a user (admin only) */
 router.delete("/:id", verifyRole("admin"), UserController.remove);
 
 export default router;

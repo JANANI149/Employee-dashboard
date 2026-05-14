@@ -5,6 +5,8 @@ export interface IUserRepository {
   getById(id: string): Promise<User | null>;
   getByEmail(email: string): Promise<User | null>;
   updateRole(orgId: string, userId: string, role: Role): Promise<User | null>;
+  updateStatus(orgId: string, userId: string, status: "active" | "inactive"): Promise<User | null>;
+  remove(orgId: string, userId: string): Promise<boolean>;
   /** id is optional — when provided (e.g., Firebase UID) it overrides the generated id. */
   create(input: Omit<User, "id" | "createdAt"> & { id?: string }): Promise<User>;
 }
