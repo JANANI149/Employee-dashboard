@@ -67,10 +67,10 @@ function ReportDetails() {
 
   return (
     <div className="grid lg:grid-cols-3 gap-6">
-      <div className="lg:col-span-2 space-y-6">
+      <div className="lg:col-span-2 space-y-6 min-w-0">
         <div>
           <div className="text-xs text-muted-foreground">#{report.id} · {report.programName}</div>
-          <h1 className="text-2xl font-semibold tracking-tight mt-1">{report.title}</h1>
+          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight mt-1">{report.title}</h1>
           <div className="flex items-center gap-2 mt-3">
             <StatusBadge status={report.status} />
             <span className="text-xs text-muted-foreground capitalize">Severity: {report.severity}</span>
@@ -100,14 +100,14 @@ function ReportDetails() {
               </div>
             ))}
           </div>
-          <form onSubmit={addComment} className="mt-5 flex gap-2">
+          <form onSubmit={addComment} className="mt-5 flex flex-col sm:flex-row gap-2">
             <input
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               placeholder="Write a comment..."
               className="flex-1 bg-input border border-border rounded-md px-3 py-2 text-sm"
             />
-            <button className="px-4 py-2 rounded-md text-sm bg-primary text-primary-foreground hover:opacity-90">
+            <button className="px-4 py-2 rounded-md text-sm bg-primary text-primary-foreground hover:opacity-90 shrink-0">
               Send
             </button>
           </form>

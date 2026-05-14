@@ -20,9 +20,9 @@ function ProgramsPage() {
   }, []);
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">Programs</h1>
-        <button className="px-3 py-2 rounded-md text-sm bg-primary text-primary-foreground hover:opacity-90">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">Programs</h1>
+        <button className="px-3 py-2 rounded-md text-sm bg-primary text-primary-foreground hover:opacity-90 shrink-0">
           + New Program
         </button>
       </div>

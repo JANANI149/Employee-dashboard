@@ -35,7 +35,7 @@ function NewReportPage() {
             className="mt-1 w-full bg-input border border-border rounded-md px-3 py-2 text-sm"
           />
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="text-sm text-muted-foreground">Program</label>
             <select

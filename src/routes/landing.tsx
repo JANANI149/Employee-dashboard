@@ -34,45 +34,64 @@ function LandingPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50/30">
       {/* Navigation */}
       <nav className="backdrop-blur-md bg-white/80 border-b border-slate-200/60 sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4">
+        <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative">
                 <div className="absolute inset-0 bg-purple-600 blur-lg opacity-20 rounded-full"></div>
-                <ShieldAlert className="h-8 w-8 text-purple-600 relative" strokeWidth={2.5} />
+                <ShieldAlert className="h-7 w-7 sm:h-8 sm:w-8 text-purple-600 relative" strokeWidth={2.5} />
               </div>
-              <span className="text-2xl font-bold tracking-tight">
+              <span className="text-xl sm:text-2xl font-bold tracking-tight">
                 <span className="text-slate-900">Bugspace</span>
                 <span className="text-purple-600">Pro</span>
               </span>
             </div>
-            
+
             <div className="hidden lg:flex items-center gap-8 text-sm font-medium text-slate-600">
               <a href="#features" className="hover:text-slate-900 transition-colors">Features</a>
               <a href="#security" className="hover:text-slate-900 transition-colors">Security</a>
               <a href="#workflow" className="hover:text-slate-900 transition-colors">Workflow</a>
               <a href="#pricing" className="hover:text-slate-900 transition-colors">Pricing</a>
             </div>
-            
-            <div className="flex items-center gap-3">
-              <Link to="/login">
-                <Button variant="ghost" className="text-slate-700 hover:text-slate-900 hover:bg-slate-100">
+
+            <div className="flex items-center gap-2">
+              <Link to="/login" className="hidden sm:block">
+                <Button variant="ghost" size="sm" className="text-slate-700 hover:text-slate-900 hover:bg-slate-100">
                   Sign In
                 </Button>
               </Link>
-              <Link to="/admin-login">
-                <Button className="bg-slate-900 hover:bg-slate-800 text-white shadow-lg shadow-slate-900/20">
+              <Link to="/admin-login" className="hidden sm:block">
+                <Button size="sm" className="bg-slate-900 hover:bg-slate-800 text-white shadow-lg shadow-slate-900/20">
                   Admin Access
                 </Button>
               </Link>
-              <button 
-                className="lg:hidden p-2"
+              <button
+                className="lg:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle menu"
               >
-                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
             </div>
           </div>
+
+          {/* Mobile dropdown menu */}
+          {mobileMenuOpen && (
+            <div className="lg:hidden mt-4 pb-4 border-t border-slate-200 pt-4 space-y-1">
+              <a href="#features" className="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" onClick={() => setMobileMenuOpen(false)}>Features</a>
+              <a href="#security" className="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" onClick={() => setMobileMenuOpen(false)}>Security</a>
+              <a href="#workflow" className="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" onClick={() => setMobileMenuOpen(false)}>Workflow</a>
+              <a href="#pricing" className="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
+              <div className="flex gap-2 pt-3">
+                <Link to="/login" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="outline" size="sm" className="w-full">Sign In</Button>
+                </Link>
+                <Link to="/admin-login" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
+                  <Button size="sm" className="w-full bg-slate-900 text-white">Admin Access</Button>
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </nav>
 
@@ -84,8 +103,8 @@ function LandingPage() {
           <div className="absolute bottom-20 left-20 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl"></div>
         </div>
 
-        <div className="container mx-auto px-6 py-12 lg:py-16 relative">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="container mx-auto px-4 sm:px-6 py-10 sm:py-12 lg:py-16 relative">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
             {/* Left Content */}
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 text-white text-sm font-medium shadow-lg">
@@ -94,7 +113,7 @@ function LandingPage() {
               </div>
               
               <div className="space-y-4">
-                <h1 className="text-4xl lg:text-6xl font-bold text-slate-900 leading-[1.1] tracking-tight">
+                <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-slate-900 leading-[1.1] tracking-tight">
                   Vulnerability
                   <br />
                   Management
@@ -138,7 +157,7 @@ function LandingPage() {
             </div>
 
             {/* Right Content - Clean High-Fidelity UI Match */}
-            <div className="relative flex items-center justify-center lg:justify-end min-h-[500px]">
+            <div className="relative flex items-center justify-center lg:justify-end min-h-[400px] lg:min-h-[500px]">
               {/* Subtle background glow */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -198,8 +217,8 @@ function LandingPage() {
                 </div>
 
                 {/* Floating Element: Alert Notification (Bottom Left) */}
-                <div className="absolute -bottom-6 -left-10 z-20 animate-float-delayed">
-                  <div className="bg-white rounded-xl p-4 shadow-xl border border-slate-200 flex items-center gap-3 w-64">
+                <div className="absolute -bottom-6 -left-2 sm:-left-10 z-20 animate-float-delayed">
+                  <div className="bg-white rounded-xl p-3 sm:p-4 shadow-xl border border-slate-200 flex items-center gap-2 sm:gap-3 w-52 sm:w-64">
                     <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0">
                       <ShieldAlert className="h-4 w-4 text-red-600" />
                     </div>
@@ -217,14 +236,14 @@ function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-24 bg-white">
+      <section id="features" className="py-14 sm:py-20 lg:py-24 bg-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 text-purple-700 text-sm font-medium mb-6">
               <Zap className="h-4 w-4" />
               Platform Capabilities
             </div>
-            <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6">
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-6">
               Built for Enterprise Security
             </h2>
             <p className="text-xl text-slate-600">
@@ -232,7 +251,7 @@ function LandingPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
             <FeatureCard
               icon={<Shield className="h-6 w-6" />}
               title="Role-Based Access Control"
@@ -274,10 +293,10 @@ function LandingPage() {
       </section>
 
       {/* Workflow Section */}
-      <section id="workflow" className="py-24 bg-gradient-to-br from-slate-50 to-purple-50/30">
-        <div className="container mx-auto px-6">
+      <section id="workflow" className="py-14 sm:py-20 lg:py-24 bg-gradient-to-br from-slate-50 to-purple-50/30">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-16 max-w-3xl mx-auto">
-            <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6">
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-6">
               Streamlined Security Workflow
             </h2>
             <p className="text-xl text-slate-600">
@@ -285,7 +304,7 @@ function LandingPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
             <WorkflowStep
               number="01"
               title="Submit"
@@ -311,16 +330,16 @@ function LandingPage() {
       </section>
 
       {/* Social Proof Section */}
-      <section className="py-20 bg-white border-y border-slate-200">
-        <div className="container mx-auto px-6">
+      <section className="py-12 sm:py-20 bg-white border-y border-slate-200">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
             <p className="text-sm text-slate-500 uppercase tracking-wider font-semibold">
               Trusted by Leading Organizations
             </p>
           </div>
-          <div className="flex items-center justify-center gap-12 lg:gap-16 flex-wrap">
+          <div className="flex items-center justify-center gap-6 sm:gap-10 lg:gap-16 flex-wrap">
             {['Tesla', 'Microsoft', 'Airtel', 'Paytm', 'CRED', 'Zomato', 'Razorpay'].map((company) => (
-              <div key={company} className="text-2xl font-bold text-slate-300 hover:text-slate-400 transition-colors">
+              <div key={company} className="text-lg sm:text-2xl font-bold text-slate-300 hover:text-slate-400 transition-colors">
                 {company}
               </div>
             ))}
@@ -329,9 +348,9 @@ function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-white">
-        <div className="container mx-auto px-6">
-          <div className="relative overflow-hidden bg-slate-900 rounded-3xl p-12 lg:p-16">
+      <section className="py-14 sm:py-20 lg:py-24 bg-white">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="relative overflow-hidden bg-slate-900 rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-16">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10">
               <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500 rounded-full blur-3xl"></div>
@@ -339,7 +358,7 @@ function LandingPage() {
             </div>
 
             <div className="relative text-center max-w-3xl mx-auto">
-              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
                 Ready to Elevate Your Security Posture?
               </h2>
               <p className="text-xl text-slate-300 mb-10">
@@ -366,9 +385,9 @@ function LandingPage() {
 
       {/* Footer */}
       <footer className="bg-slate-900 text-white">
-        <div className="container mx-auto px-6 py-16">
-          <div className="grid md:grid-cols-5 gap-12 mb-12">
-            <div className="md:col-span-2">
+        <div className="container mx-auto px-4 sm:px-6 py-10 sm:py-16">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 sm:gap-12 mb-10 sm:mb-12">
+            <div className="col-span-2 md:col-span-2">
               <div className="flex items-center gap-3 mb-4">
                 <ShieldAlert className="h-8 w-8 text-purple-400" strokeWidth={2.5} />
                 <span className="text-2xl font-bold">
@@ -426,7 +445,7 @@ function LandingPage() {
             </div>
           </div>
           
-          <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="border-t border-slate-800 pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-slate-400 text-sm">
               © 2024 BugspacePro. All rights reserved.
             </p>

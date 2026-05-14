@@ -17,8 +17,8 @@ export function ReportsTable() {
     reportRepository.list().then(setReports).catch(() => setReports(placeholder));
   }, []);
   return (
-    <div className="bg-card border border-border rounded-lg overflow-hidden">
-      <table className="w-full text-sm">
+    <div className="bg-card border border-border rounded-lg overflow-x-auto">
+      <table className="w-full text-sm min-w-[560px]">
         <thead className="bg-secondary/40 text-muted-foreground">
           <tr>
             <th className="text-left px-4 py-2 font-medium">ID</th>

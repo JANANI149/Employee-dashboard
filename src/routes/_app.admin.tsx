@@ -15,8 +15,8 @@ function AdminDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Admin Dashboard</h1>
+        <p className="text-muted-foreground text-sm sm:text-base">
           Manage organizations, users, and monitor platform activity
         </p>
       </div>
@@ -26,24 +26,28 @@ function AdminDashboard() {
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="users" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto">
-          <TabsTrigger value="users" className="gap-2">
-            <Users className="h-4 w-4" />
-            Users
-          </TabsTrigger>
-          <TabsTrigger value="pending" className="gap-2">
-            <Clock className="h-4 w-4" />
-            Pending
-          </TabsTrigger>
-          <TabsTrigger value="organizations" className="gap-2">
-            <Building2 className="h-4 w-4" />
-            Organizations
-          </TabsTrigger>
-          <TabsTrigger value="audit" className="gap-2">
-            <FileText className="h-4 w-4" />
-            Audit Logs
-          </TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+          <TabsList className="grid grid-cols-4 min-w-[400px] sm:min-w-0 sm:w-full lg:w-auto">
+            <TabsTrigger value="users" className="gap-1 sm:gap-2 text-xs sm:text-sm">
+              <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              Users
+            </TabsTrigger>
+            <TabsTrigger value="pending" className="gap-1 sm:gap-2 text-xs sm:text-sm">
+              <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              Pending
+            </TabsTrigger>
+            <TabsTrigger value="organizations" className="gap-1 sm:gap-2 text-xs sm:text-sm">
+              <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Organizations</span>
+              <span className="sm:hidden">Orgs</span>
+            </TabsTrigger>
+            <TabsTrigger value="audit" className="gap-1 sm:gap-2 text-xs sm:text-sm">
+              <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Audit Logs</span>
+              <span className="sm:hidden">Audit</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="users" className="space-y-4">
           <div>

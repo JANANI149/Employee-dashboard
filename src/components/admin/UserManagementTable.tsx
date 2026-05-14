@@ -105,8 +105,8 @@ export function UserManagementTable() {
   return (
     <div className="space-y-4">
       {/* Toolbar */}
-      <div className="flex items-center gap-3">
-        <div className="relative flex-1 max-w-xs">
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="relative flex-1 min-w-[180px] max-w-xs">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
@@ -131,7 +131,7 @@ export function UserManagementTable() {
 
       {/* Table */}
       <div className="bg-card border border-border rounded-lg overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full text-sm min-w-[700px]">
           <thead className="bg-secondary/40 text-muted-foreground text-xs uppercase tracking-wider">
             <tr>
               <th className="text-left px-4 py-3 font-medium">Name</th>
