@@ -6,7 +6,7 @@ const db = admin.firestore();
 const auditLogsCollection = db.collection("audit_logs");
 
 export class FirestoreAuditLogRepository implements IAuditLogRepository {
-  async list(orgId: string): Promise<AuditLog[]> {
+  async listByOrg(orgId: string): Promise<AuditLog[]> {
     const snapshot = await auditLogsCollection
       .where("orgId", "==", orgId)
       .orderBy("createdAt", "desc")
@@ -14,8 +14,10 @@ export class FirestoreAuditLogRepository implements IAuditLogRepository {
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as AuditLog));
   }
 
-  async create(input: Omit<AuditLog, "id">): Promise<AuditLog> {
-    const docRef = await auditLogsCollection.add(input);
-    return { id: docRef.id, ...input };
+  async append(entry: Omit<AuditLog, "id" | "createdAt">): Promise<AuditLog> {
+    const now = new Date().toISOString();
+    const data = { ...entry, createdAt: now };
+    const docRef = await auditLogsCollection.add(data);
+    return { id: docRef.id, ...data };
   }
 }

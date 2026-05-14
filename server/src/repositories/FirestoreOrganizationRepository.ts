@@ -17,6 +17,10 @@ export class FirestoreOrganizationRepository implements IOrganizationRepository 
     return { id: doc.id, ...doc.data() } as Organization;
   }
 
+  async get(id: string): Promise<Organization | null> {
+    return this.getById(id);
+  }
+
   async create(input: Omit<Organization, "id">): Promise<Organization> {
     const docRef = await orgsCollection.add(input);
     return { id: docRef.id, ...input };
