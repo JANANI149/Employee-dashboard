@@ -16,6 +16,7 @@ import type { User as FirebaseUser } from "firebase/auth";
 import { signInWithGoogle, signInWithEmail, signOut, onAuthChange, getIdToken } from "@/lib/googleAuth";
 import type { User } from "@/types";
 import { api } from "@/services/api";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 interface AuthState {
   /** Firebase identity — set immediately on sign-in. */
@@ -135,7 +136,34 @@ export const useAuth = create<AuthState>()((set) => ({
       set({ appUser, loading: false, error: null });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Failed to load user profile";
-      console.error("[Auth] Backend sync failed:", message);
+      console.error("[Auth] Backend sync failed, falling back to Firestore:", message);
+
+      // Fallback: read role directly from Firestore if backend is unavailable (e.g. cold start)
+      try {
+        const db = getFirestore();
+        const userDoc = await getDoc(doc(db, "users", fbUser.uid));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          if (data.role && data.status !== "inactive") {
+            const fallbackUser: User = {
+              id: fbUser.uid,
+              email: fbUser.email ?? "",
+              name: fbUser.displayName ?? data.name ?? "",
+              role: data.role,
+              orgId: data.orgId ?? "org-1",
+              status: data.status ?? "active",
+            };
+            if (typeof window !== "undefined") {
+              localStorage.setItem("bp_orgId", fallbackUser.orgId);
+            }
+            set({ appUser: fallbackUser, loading: false, error: null });
+            return;
+          }
+        }
+      } catch (firestoreErr) {
+        console.error("[Auth] Firestore fallback also failed:", firestoreErr);
+      }
+
       set({ appUser: null, loading: false, error: message });
     }
   },
