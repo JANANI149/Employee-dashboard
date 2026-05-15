@@ -56,11 +56,6 @@ function LandingPage() {
 
             <div className="flex items-center gap-2">
               <Link to="/login" className="hidden sm:block">
-                <Button variant="ghost" size="sm" className="text-slate-700 hover:text-slate-900 hover:bg-slate-100">
-                  Sign In
-                </Button>
-              </Link>
-              <Link to="/login" className="hidden sm:block">
                 <Button size="sm" className="bg-slate-900 hover:bg-slate-800 text-white shadow-lg shadow-slate-900/20">
                   Get Started
                 </Button>
@@ -83,9 +78,6 @@ function LandingPage() {
               <a href="#workflow" className="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" onClick={() => setMobileMenuOpen(false)}>Workflow</a>
               <a href="#pricing" className="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
               <div className="flex gap-2 pt-3">
-                <Link to="/login" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="outline" size="sm" className="w-full">Sign In</Button>
-                </Link>
                 <Link to="/login" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
                   <Button size="sm" className="w-full bg-slate-900 text-white">Get Started</Button>
                 </Link>
