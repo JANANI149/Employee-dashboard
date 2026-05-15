@@ -92,12 +92,7 @@ function LoginPage() {
           </div>
         </div>
 
-        {/* Admin Login Link */}
-        <div className="mt-6 text-center">
-          <Link to="/admin-login" className="text-sm text-slate-600 hover:text-slate-900 transition-colors font-medium">
-            Administrator? Sign in here →
-          </Link>
-        </div>
+
       </div>
     </div>
   );

@@ -60,9 +60,9 @@ function LandingPage() {
                   Sign In
                 </Button>
               </Link>
-              <Link to="/admin-login" className="hidden sm:block">
+              <Link to="/login" className="hidden sm:block">
                 <Button size="sm" className="bg-slate-900 hover:bg-slate-800 text-white shadow-lg shadow-slate-900/20">
-                  Admin Access
+                  Get Started
                 </Button>
               </Link>
               <button
@@ -86,8 +86,8 @@ function LandingPage() {
                 <Link to="/login" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="outline" size="sm" className="w-full">Sign In</Button>
                 </Link>
-                <Link to="/admin-login" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
-                  <Button size="sm" className="w-full bg-slate-900 text-white">Admin Access</Button>
+                <Link to="/login" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
+                  <Button size="sm" className="w-full bg-slate-900 text-white">Get Started</Button>
                 </Link>
               </div>
             </div>
@@ -132,11 +132,11 @@ function LandingPage() {
                     <ArrowRight className="h-5 w-5 ml-2" />
                   </Button>
                 </Link>
-                <Link to="/admin-login">
+                <a href="#features">
                   <Button size="lg" variant="outline" className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 h-12 px-6 text-base">
-                    Admin Portal
+                    Learn More
                   </Button>
-                </Link>
+                </a>
               </div>
 
               {/* Stats */}

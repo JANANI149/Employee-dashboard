@@ -13,7 +13,7 @@
 import React, { useEffect } from "react";
 import { create } from "zustand";
 import type { User as FirebaseUser } from "firebase/auth";
-import { signInWithGoogle, signInWithEmail, signOut, onAuthChange, getIdToken } from "@/lib/googleAuth";
+import { signInWithGoogle, signOut, onAuthChange, getIdToken } from "@/lib/googleAuth";
 import type { User } from "@/types";
 import { api } from "@/services/api";
 import { db } from "@/lib/firebase";
@@ -33,8 +33,6 @@ interface AuthState {
   // ── Actions ────────────────────────────────────────────────────────────
   /** Trigger Google sign-in popup, then bootstrap the app user from the backend. */
   signInWithGoogle: () => Promise<void>;
-  /** Sign in with email and password (for admin). */
-  signInWithEmail: (email: string, password: string) => Promise<void>;
   /** Sign the user out of Firebase and clear all local state. */
   signOut: () => Promise<void>;
   /**
@@ -63,26 +61,7 @@ export const useAuth = create<AuthState>()((set) => ({
     }
   },
 
-  signInWithEmail: async (email: string, password: string) => {
-    set({ loading: true, error: null });
-    try {
-      // Firebase email/password sign-in
-      // The onAuthChange listener will handle the backend call automatically
-      await signInWithEmail(email, password);
-    } catch (err: any) {
-      let message = "Sign-in failed";
-      if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password") {
-        message = "Invalid email or password";
-      } else if (err.code === "auth/user-not-found") {
-        message = "No account found with this email";
-      } else if (err.code === "auth/too-many-requests") {
-        message = "Too many failed attempts. Please try again later";
-      } else if (err.message) {
-        message = err.message;
-      }
-      set({ loading: false, error: message });
-    }
-  },
+
 
   signOut: async () => {
     set({ loading: true, error: null });

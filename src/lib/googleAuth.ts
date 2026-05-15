@@ -8,7 +8,6 @@
 import {
   GoogleAuthProvider,
   signInWithPopup,
-  signInWithEmailAndPassword,
   signOut as firebaseSignOut,
   onIdTokenChanged,
   type User as FirebaseUser,
@@ -29,15 +28,7 @@ export async function signInWithGoogle(): Promise<FirebaseUser> {
   return result.user;
 }
 
-/**
- * Sign in with email and password.
- * Returns the Firebase User on success.
- * Throws on invalid credentials or error.
- */
-export async function signInWithEmail(email: string, password: string): Promise<FirebaseUser> {
-  const result = await signInWithEmailAndPassword(firebaseAuth, email, password);
-  return result.user;
-}
+
 
 /**
  * Sign the current user out of Firebase.
