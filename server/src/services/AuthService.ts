@@ -1,16 +1,6 @@
 import type { IUserRepository } from "../interfaces/IUserRepository.js";
 import type { User } from "../types/index.js";
-import { adminAuth } from "../config/firebase.js";
-
-/**
- * Emails that are automatically assigned the "admin" role on first login.
- * These users bypass the waiting-approval flow entirely.
- */
-const ADMIN_EMAILS: string[] = [
-  "kavinhbn@gmail.com",
-  "tnhariyt009@gmail.com",
-  "bugspacepro@gmail.com",
-];
+import admin, { adminAuth } from "../config/firebase.js";
 
 export class AuthService {
   constructor(private userRepo: IUserRepository) {}
@@ -22,9 +12,9 @@ export class AuthService {
    *  1. Verify the token with Firebase Admin SDK.
    *  2. Look up the user in our database by Firebase UID (or email as fallback).
    *  3. If the user doesn't exist yet, create a record (first-time login).
-   *     - If the email is in ADMIN_EMAILS → role: "admin", status: "active"
+   *     - If the email is in the 'allowed_emails' list in Firestore → role: "admin", status: "active"
    *     - Otherwise → no role, status: "inactive" (needs admin approval)
-   *  4. If the user exists but has no role and their email is in ADMIN_EMAILS,
+   *  4. If the user exists but has no role and their email is in the list,
    *     auto-upgrade them to admin.
    *  5. Return the app user (with role + orgId).
    */
@@ -39,8 +29,13 @@ export class AuthService {
       user = await this.userRepo.getByEmail(decoded.email);
     }
 
+    // Step 3: Check if email is in the allowed admin list in Firestore
+    const db = admin.firestore();
+    const configDoc = await db.collection("config").doc("admins").get();
+    const allowedEmails: string[] = configDoc.data()?.allowed_emails || [];
+
     const isAdminEmail = decoded.email
-      ? ADMIN_EMAILS.includes(decoded.email.toLowerCase())
+      ? allowedEmails.some(e => e.toLowerCase() === decoded.email?.toLowerCase())
       : false;
 
     if (!user) {
