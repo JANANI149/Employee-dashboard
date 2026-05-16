@@ -66,6 +66,7 @@ export class AuthService {
           role: "" as any,
           orgId: "none",
           status: "inactive",
+          createdAt: new Date().toISOString(),
         };
       }
     } else if (user.status === "inactive" && user.role) {
@@ -84,7 +85,7 @@ export class AuthService {
       user = (await this.userRepo.updateRole(user.orgId, user.id, "admin")) ?? user;
     }
 
-    return { user };
+    return { user: user as User };
   }
 
   /**
