@@ -16,9 +16,10 @@ import { RoleBadge } from "./RoleBadge";
 import { ConfirmModal } from "./ConfirmModal";
 import { useAuth } from "@/store/auth";
 import { Button } from "@/components/ui/button";
-import { Search, RefreshCw, Trash2, ShieldCheck, Power } from "lucide-react";
+import { Search, RefreshCw, Trash2, ShieldCheck, Power, ChevronLeft, ChevronRight } from "lucide-react";
 
 const ROLES: Role[] = ["admin", "manager", "researcher", "employee"];
+const ITEMS_PER_PAGE = 5;
 
 function SkeletonRow() {
   return (
@@ -42,6 +43,7 @@ export function UserManagementTable() {
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<User | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
@@ -102,6 +104,20 @@ export function UserManagementTable() {
     return u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
   });
 
+  // Reset page when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const paginatedUsers = filtered.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const startIdx = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+  const endIdx = Math.min(currentPage * ITEMS_PER_PAGE, filtered.length);
+
   return (
     <div className="space-y-4">
       {/* Toolbar */}
@@ -144,14 +160,14 @@ export function UserManagementTable() {
           </thead>
           <tbody>
             {loading && [...Array(4)].map((_, i) => <SkeletonRow key={i} />)}
-            {!loading && filtered.length === 0 && (
+            {!loading && paginatedUsers.length === 0 && (
               <tr>
                 <td colSpan={6} className="px-4 py-10 text-center text-muted-foreground text-sm">
                   {search ? "No users match your search." : "No users found."}
                 </td>
               </tr>
             )}
-            {!loading && filtered.map((u) => (
+            {!loading && paginatedUsers.map((u) => (
               <tr key={u.id} className="border-t border-border hover:bg-secondary/20 transition-colors">
                 {/* Name */}
                 <td className="px-4 py-3 font-medium">{u.name}</td>
@@ -224,10 +240,62 @@ export function UserManagementTable() {
         </table>
       </div>
 
-      {/* Pagination placeholder */}
-      <p className="text-xs text-muted-foreground text-right">
-        Showing {filtered.length} of {users.length} users
-      </p>
+      {/* Pagination */}
+      {!loading && filtered.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-2">
+          <p className="text-xs text-muted-foreground">
+            Showing <span className="font-medium text-foreground">{startIdx}</span> to{" "}
+            <span className="font-medium text-foreground">{endIdx}</span> of{" "}
+            <span className="font-medium text-foreground">{filtered.length}</span> users
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <div className="flex items-center gap-1">
+              {[...Array(totalPages)].map((_, i) => {
+                const page = i + 1;
+                // Only show 3 pages if there are many, or all if few
+                if (
+                  totalPages > 5 &&
+                  page !== 1 &&
+                  page !== totalPages &&
+                  Math.abs(page - currentPage) > 1
+                ) {
+                  if (page === 2 || page === totalPages - 1) return <span key={page} className="text-muted-foreground px-1">...</span>;
+                  return null;
+                }
+                return (
+                  <Button
+                    key={page}
+                    variant={currentPage === page ? "default" : "outline"}
+                    size="sm"
+                    className="h-8 w-8 text-xs p-0"
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </Button>
+                );
+              })}
+            </div>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Confirm delete modal */}
       <ConfirmModal
