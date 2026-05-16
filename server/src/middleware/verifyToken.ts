@@ -34,7 +34,7 @@ export async function verifyToken(
     const parts = token.split(".");
     const role = (parts[1] as any) ?? "employee";
     const orgId = (req.headers["x-org-id"] as string) ?? "org-1";
-    req.user = { id: `u-${role}`, role, orgId };
+    req.user = { id: `u-${role}`, name: `Demo ${role}`, role, orgId };
     return next();
   }
 
@@ -60,6 +60,7 @@ export async function verifyToken(
     
     req.user = {
       id: dbUser.id,
+      name: dbUser.name,
       role: dbUser.role || "employee",
       orgId: dbUser.orgId,
     };

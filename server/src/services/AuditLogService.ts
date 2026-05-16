@@ -24,4 +24,9 @@ export class AuditLogService {
   async listByOrg(orgId: string) {
     return this.repo.listByOrg(orgId);
   }
+ 
+  /** Return all logs across all orgs (Admin only). */
+  async listAll() {
+    return this.repo.listAll();
+  }
 }

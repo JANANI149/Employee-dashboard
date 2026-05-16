@@ -51,7 +51,7 @@ export const UserController = {
       await auditService.log({
         orgId: req.orgId!, // The admin's current org context
         actorId: req.user!.id,
-        actorName: req.user!.id,
+        actorName: req.user!.name,
         action: "USER_ORG_CHANGED",
         targetType: "user",
         targetId: req.params.id,
@@ -96,7 +96,7 @@ export const UserController = {
       await auditService.log({
         orgId: req.orgId!,
         actorId: req.user!.id,
-        actorName: req.user!.id,
+        actorName: req.user!.name,
         action: "ROLE_CHANGED",
         targetType: "user",
         targetId: req.params.id,
@@ -137,7 +137,7 @@ export const UserController = {
       await auditService.log({
         orgId: req.orgId!,
         actorId: req.user!.id,
-        actorName: req.user!.id,
+        actorName: req.user!.name,
         action: status === "inactive" ? "USER_DEACTIVATED" : "USER_ACTIVATED",
         targetType: "user",
         targetId: req.params.id,
@@ -174,7 +174,7 @@ export const UserController = {
       await auditService.log({
         orgId: req.orgId!,
         actorId: req.user!.id,
-        actorName: req.user!.id,
+        actorName: req.user!.name,
         action: "USER_DELETED",
         targetType: "user",
         targetId: req.params.id,

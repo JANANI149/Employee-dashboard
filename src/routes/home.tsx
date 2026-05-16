@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/landing")({
+export const Route = createFileRoute("/home")({
   component: LandingPage,
 });
 

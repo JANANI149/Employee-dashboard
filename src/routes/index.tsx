@@ -16,8 +16,8 @@ function Index() {
     if (loading) return;
     
     if (!firebaseUser) {
-      // Not logged in - redirect to landing page
-      navigate({ to: "/landing" });
+      // Not logged in - redirect to home page
+      navigate({ to: "/home" });
     } else if (!appUser || !appUser.role || appUser.status === "inactive") {
       // Logged in but no role assigned or inactive - redirect to blog
       navigate({ to: "/blog" as any });

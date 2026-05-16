@@ -11,8 +11,15 @@ export const AuditLogController = {
    * Read-only — no POST/PATCH/DELETE endpoints exist (append-only by design).
    */
   list: async (req: Request, res: Response) => {
-    const orgId = req.user!.orgId;
-    const logs = await service.listByOrg(orgId);
-    return res.status(200).json(logs);
+    try {
+      // Admins see everything; managers/others see only their org
+      const logs = req.user!.role === "admin"
+        ? await service.listAll()
+        : await service.listByOrg(req.user!.orgId);
+      return res.status(200).json(logs);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to fetch logs";
+      return res.status(500).json({ error: message });
+    }
   },
 };

@@ -3,6 +3,7 @@ export type ReportStatus = "New" | "Needs Info" | "Triaged" | "Valid" | "Duplica
 
 export interface AuthUser {
   id: string;
+  name: string;
   role: Role;
   orgId: string;
 }

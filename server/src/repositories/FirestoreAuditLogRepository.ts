@@ -13,6 +13,13 @@ export class FirestoreAuditLogRepository implements IAuditLogRepository {
       .get();
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as AuditLog));
   }
+ 
+  async listAll(): Promise<AuditLog[]> {
+    const snapshot = await auditLogsCollection
+      .orderBy("createdAt", "desc")
+      .get();
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as AuditLog));
+  }
 
   async append(entry: Omit<AuditLog, "id" | "createdAt">): Promise<AuditLog> {
     const now = new Date().toISOString();
