@@ -12,8 +12,10 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { auditLogRepository } from "@/repositories/ApiAuditLogRepository";
 import type { AuditLog } from "@/types";
-import { Search, RefreshCw, Clock, ShieldAlert } from "lucide-react";
+import { Search, RefreshCw, Clock, ShieldAlert, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+const ITEMS_PER_PAGE = 5;
 
 function formatRelative(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
@@ -42,6 +44,7 @@ function SkeletonRow() {
 export function AuditLogViewer() {
   const [search, setSearch] = useState("");
   const [filterAction, setFilterAction] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data: logs = [], isLoading, error, refetch } = useQuery({
     queryKey: ["audit-logs"],
@@ -56,6 +59,15 @@ export function AuditLogViewer() {
     const matchAction = filterAction === "all" || l.action === filterAction;
     return matchSearch && matchAction;
   });
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const paginatedLogs = filtered.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const startIdx = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+  const endIdx = Math.min(currentPage * ITEMS_PER_PAGE, filtered.length);
 
   return (
     <div className="space-y-4">
@@ -106,7 +118,7 @@ export function AuditLogViewer() {
       <div className="bg-card border border-border rounded-lg px-6 divide-y divide-border">
         {isLoading && [...Array(5)].map((_, i) => <SkeletonRow key={i} />)}
 
-        {!isLoading && filtered.length === 0 && (
+        {!isLoading && paginatedLogs.length === 0 && (
           <div className="py-16 text-center">
             <Clock className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
             <p className="text-sm text-muted-foreground">
@@ -115,7 +127,7 @@ export function AuditLogViewer() {
           </div>
         )}
 
-        {!isLoading && filtered.map((log) => (
+        {!isLoading && paginatedLogs.map((log) => (
           <div key={log.id} className="flex items-start gap-4 py-4">
             {/* Actor avatar placeholder */}
             <div className="mt-0.5 h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-semibold flex-shrink-0">
@@ -149,9 +161,61 @@ export function AuditLogViewer() {
         ))}
       </div>
 
-      <p className="text-xs text-muted-foreground text-right">
-        {filtered.length} of {logs.length} events
-      </p>
+      {/* Pagination */}
+      {!isLoading && filtered.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-2">
+          <p className="text-xs text-muted-foreground">
+            Showing <span className="font-medium text-foreground">{startIdx}</span> to{" "}
+            <span className="font-medium text-foreground">{endIdx}</span> of{" "}
+            <span className="font-medium text-foreground">{filtered.length}</span> events
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <div className="flex items-center gap-1">
+              {[...Array(totalPages)].map((_, i) => {
+                const page = i + 1;
+                if (
+                  totalPages > 5 &&
+                  page !== 1 &&
+                  page !== totalPages &&
+                  Math.abs(page - currentPage) > 1
+                ) {
+                  if (page === 2 || page === totalPages - 1) return <span key={page} className="text-muted-foreground px-1">...</span>;
+                  return null;
+                }
+                return (
+                  <Button
+                    key={page}
+                    variant={currentPage === page ? "default" : "outline"}
+                    size="sm"
+                    className="h-8 w-8 text-xs p-0"
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </Button>
+                );
+              })}
+            </div>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

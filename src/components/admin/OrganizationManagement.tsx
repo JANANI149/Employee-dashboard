@@ -23,7 +23,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Building2, MoreVertical } from "lucide-react";
+import { Plus, Building2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import type { Organization } from "@/types";
@@ -35,6 +35,8 @@ export function OrganizationManagement() {
     domain: "",
     description: "",
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 5;
 
   const queryClient = useQueryClient();
 
@@ -85,6 +87,15 @@ export function OrganizationManagement() {
     const newStatus = org.status === "active" ? "inactive" : "active";
     updateStatusMutation.mutate({ id: org.id, status: newStatus });
   };
+
+  const totalPages = Math.ceil((organizations?.length || 0) / ITEMS_PER_PAGE);
+  const paginatedOrgs = (organizations || []).slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const startIdx = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+  const endIdx = Math.min(currentPage * ITEMS_PER_PAGE, organizations?.length || 0);
 
   return (
     <div className="space-y-4">
@@ -194,8 +205,8 @@ export function OrganizationManagement() {
                   </TableCell>
                 </TableRow>
               ))
-            ) : organizations && organizations.length > 0 ? (
-              organizations.map((org) => (
+            ) : paginatedOrgs && paginatedOrgs.length > 0 ? (
+              paginatedOrgs.map((org) => (
                 <TableRow key={org.id}>
                   <TableCell>
                     <div className="flex items-center gap-2">
@@ -249,6 +260,62 @@ export function OrganizationManagement() {
           </TableBody>
         </Table>
       </div>
+
+      {/* Pagination */}
+      {!isLoading && organizations && organizations.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-2">
+          <p className="text-xs text-muted-foreground">
+            Showing <span className="font-medium text-foreground">{startIdx}</span> to{" "}
+            <span className="font-medium text-foreground">{endIdx}</span> of{" "}
+            <span className="font-medium text-foreground">{organizations.length}</span> organizations
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <div className="flex items-center gap-1">
+              {[...Array(totalPages)].map((_, i) => {
+                const page = i + 1;
+                if (
+                  totalPages > 5 &&
+                  page !== 1 &&
+                  page !== totalPages &&
+                  Math.abs(page - currentPage) > 1
+                ) {
+                  if (page === 2 || page === totalPages - 1) return <span key={page} className="text-muted-foreground px-1">...</span>;
+                  return null;
+                }
+                return (
+                  <Button
+                    key={page}
+                    variant={currentPage === page ? "default" : "outline"}
+                    size="sm"
+                    className="h-8 w-8 text-xs p-0"
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </Button>
+                );
+              })}
+            </div>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
