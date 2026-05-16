@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { reportRepository } from "@/repositories/ApiReportRepository";
-import type { Comment, Report, ReportStatus } from "@/types";
-import { StatusBadge } from "@/components/StatusBadge";
+import { reportRepository } from "../repositories/ApiReportRepository";
+import type { Comment, Report, ReportStatus } from "../types";
+import { StatusBadge } from "../components/StatusBadge";
 
 export const Route = createFileRoute("/_app/reports/$reportId")({
   component: ReportDetails,

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { userRepository } from "@/repositories/ApiUserRepository";
-import type { Role } from "@/types";
+import { userRepository } from "../../repositories/ApiUserRepository";
+import type { Role } from "../../types";
 import {
   Table,
   TableBody,
@@ -9,19 +9,19 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "../ui/table";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+} from "../ui/select";
+import { Button } from "../ui/button";
 import { CheckCircle2, Clock, ChevronLeft, ChevronRight } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "../ui/skeleton";
 import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "../ui/badge";
 
 export function PendingApprovals() {
   const queryClient = useQueryClient();

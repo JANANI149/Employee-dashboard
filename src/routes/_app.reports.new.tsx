@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { reportRepository } from "@/repositories/ApiReportRepository";
-import type { Severity } from "@/types";
+import { reportRepository } from "../repositories/ApiReportRepository";
+import type { Severity } from "../types";
 
 export const Route = createFileRoute("/_app/reports/new")({
   component: NewReportPage,

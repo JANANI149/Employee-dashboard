@@ -4,8 +4,8 @@
  */
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ShieldX } from "lucide-react";
-import { useAuth } from "@/store/auth";
-import { getRoleDashboard } from "@/lib/roleRedirect";
+import { useAuth } from "../store/auth";
+import { getRoleDashboard } from "../lib/roleRedirect";
 
 export const Route = createFileRoute("/unauthorized")({
   component: UnauthorizedPage,

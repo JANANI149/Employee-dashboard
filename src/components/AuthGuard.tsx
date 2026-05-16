@@ -15,8 +15,8 @@
  */
 import { useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useAuth } from "@/store/auth";
-import type { Role } from "@/types";
+import { useAuth } from "../store/auth";
+import type { Role } from "../types";
 
 interface AuthGuardProps {
   children: React.ReactNode;

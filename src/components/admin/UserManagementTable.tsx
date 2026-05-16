@@ -10,13 +10,14 @@
  * - Skeleton loading state
  */
 import { useState, useEffect, useCallback } from "react";
-import { api } from "@/services/api";
-import type { User, Role } from "@/types";
+import { api } from "../../services/api";
+import type { User, Role, Organization } from "../../types";
 import { RoleBadge } from "./RoleBadge";
 import { ConfirmModal } from "./ConfirmModal";
-import { useAuth } from "@/store/auth";
-import { Button } from "@/components/ui/button";
-import { Search, RefreshCw, Trash2, ShieldCheck, Power, ChevronLeft, ChevronRight } from "lucide-react";
+import { AddUserModal } from "./AddUserModal";
+import { useAuth } from "../../store/auth";
+import { Button } from "../ui/button";
+import { Search, RefreshCw, Trash2, ShieldCheck, Power, ChevronLeft, ChevronRight, UserPlus } from "lucide-react";
 
 const ROLES: Role[] = ["admin", "manager", "researcher", "employee"];
 const ITEMS_PER_PAGE = 5;
@@ -36,23 +37,31 @@ function SkeletonRow() {
 export function UserManagementTable() {
   const { appUser } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [updatingRole, setUpdatingRole] = useState<string | null>(null);
+  const [updatingOrg, setUpdatingOrg] = useState<string | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<User | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [addModalOpen, setAddModalOpen] = useState(false);
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await api.get<User[]>("/users");
-      setUsers(data);
+      const [{ data: userData }, { data: orgData }] = await Promise.all([
+        api.get<User[]>("/users"),
+        api.get<Organization[]>("/organizations")
+      ]);
+      setUsers(userData);
+      setOrganizations(orgData);
     } catch {
-      setError("Failed to load users. Please try again.");
+      setError("Failed to load data. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -70,6 +79,17 @@ export function UserManagementTable() {
     } finally {
       setUpdatingRole(null);
     }
+  };
+
+  const handleOrgChange = async (userId: string, orgId: string) => {
+    setUpdatingOrg(userId);
+    try {
+      await api.patch(`/users/${userId}/org`, { orgId });
+      setUsers(users.map((u) => (u.id === userId ? { ...u, orgId } : u)));
+    } catch {
+      setError("Failed to update organization.");
+    }
+    setUpdatingOrg(null);
   };
 
   const handleStatusToggle = async (user: User) => {
@@ -100,14 +120,15 @@ export function UserManagementTable() {
   };
 
   const filtered = users.filter((u) => {
-    const q = search.toLowerCase();
-    return u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+    const q = searchQuery.toLowerCase();
+    if (!q) return true;
+    return u.name.toLowerCase() === q || u.email.toLowerCase() === q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
   });
 
   // Reset page when search changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [search]);
+  }, [searchQuery]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paginatedUsers = filtered.slice(
@@ -122,20 +143,54 @@ export function UserManagementTable() {
     <div className="space-y-4">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[180px] max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search by name or email…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 rounded-md border border-border bg-background text-sm outline-none focus:ring-2 focus:ring-ring"
-          />
+        <div className="relative flex-1 min-w-[180px] max-w-xs flex gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search exact name or email..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setSearchQuery(searchInput);
+                }
+              }}
+              className="w-full pl-9 pr-3 py-2 rounded-md border border-border bg-background text-sm outline-none focus:ring-2 focus:ring-ring"
+            />
+          </div>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => setSearchQuery(searchInput)}
+            className="h-9 px-3"
+          >
+            Search
+          </Button>
+          {searchQuery && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setSearchInput("");
+                setSearchQuery("");
+              }}
+              className="h-9 px-3 text-muted-foreground"
+            >
+              Clear
+            </Button>
+          )}
         </div>
-        <Button variant="outline" size="sm" onClick={fetchUsers} className="gap-1.5">
-          <RefreshCw className="h-3.5 w-3.5" />
-          Refresh
-        </Button>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Button variant="outline" size="sm" onClick={fetchUsers} disabled={loading} className="gap-1.5 flex-1 sm:flex-none justify-center">
+            <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
+            Refresh
+          </Button>
+          <Button size="sm" onClick={() => setAddModalOpen(true)} className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 flex-1 sm:flex-none justify-center">
+            <UserPlus className="h-3.5 w-3.5" />
+            Add Users
+          </Button>
+        </div>
       </div>
 
       {/* Error */}
@@ -163,7 +218,7 @@ export function UserManagementTable() {
             {!loading && paginatedUsers.length === 0 && (
               <tr>
                 <td colSpan={6} className="px-4 py-10 text-center text-muted-foreground text-sm">
-                  {search ? "No users match your search." : "No users found."}
+                  {searchQuery ? "No users match your search." : "No users found."}
                 </td>
               </tr>
             )}
@@ -175,7 +230,7 @@ export function UserManagementTable() {
                 <td className="px-4 py-3 text-muted-foreground">{u.email}</td>
                 {/* Role — inline dropdown for admins */}
                 <td className="px-4 py-3">
-                  {appUser?.role === "admin" && u.id !== appUser?.id ? (
+                  {appUser?.role === "admin" && u.role !== "admin" ? (
                     <div className="flex items-center gap-2">
                       <ShieldCheck className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
                       <select
@@ -196,18 +251,41 @@ export function UserManagementTable() {
                     <RoleBadge role={u.role} />
                   )}
                 </td>
-                {/* Org */}
-                <td className="px-4 py-3 text-muted-foreground font-mono text-xs">{u.orgId}</td>
+                {/* Org — dropdown for admins */}
+                <td className="px-4 py-3">
+                  {appUser?.role === "admin" && u.role !== "admin" ? (
+                    <select
+                      value={u.orgId}
+                      disabled={updatingOrg === u.id}
+                      onChange={(e) => handleOrgChange(u.id, e.target.value)}
+                      className="text-xs rounded border border-border bg-background px-1.5 py-1 outline-none focus:ring-1 focus:ring-ring disabled:opacity-50 w-full max-w-[150px]"
+                    >
+                      <option value="">No Organization</option>
+                      {organizations.map((org) => (
+                        <option key={org.id} value={org.id}>
+                          {org.name}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <span className="text-muted-foreground font-mono text-xs">
+                      {organizations.find(o => o.id === u.orgId)?.name || u.orgId || "N/A"}
+                    </span>
+                  )}
+                  {updatingOrg === u.id && (
+                    <div className="text-[10px] text-muted-foreground animate-pulse mt-1">Updating org…</div>
+                  )}
+                </td>
                 {/* Status */}
                 <td className="px-4 py-3">
-                  <span className={`inline-flex items-center gap-1.5 text-xs ${u.status === "inactive" ? "text-destructive" : "text-emerald-400"}`}>
-                    <span className={`h-1.5 w-1.5 rounded-full ${u.status === "inactive" ? "bg-destructive" : "bg-emerald-400"}`} />
-                    {u.status ?? "active"}
+                  <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-full ${u.status === "inactive" ? "bg-amber-500/10 text-amber-500" : "bg-emerald-500/10 text-emerald-500"}`}>
+                    <span className={`h-1.5 w-1.5 rounded-full ${u.status === "inactive" ? "bg-amber-500" : "bg-emerald-500"}`} />
+                    {u.status === "inactive" ? "Invited / Inactive" : "Active"}
                   </span>
                 </td>
                 {/* Actions */}
                 <td className="px-4 py-3 text-right">
-                  {appUser?.role === "admin" && u.id !== appUser?.id && (
+                  {appUser?.role === "admin" && u.role !== "admin" && (
                     <div className="flex items-center justify-end gap-1">
                       <Button
                         variant="ghost"
@@ -306,6 +384,12 @@ export function UserManagementTable() {
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}
         destructive
+      />
+
+      <AddUserModal
+        open={addModalOpen}
+        onOpenChange={setAddModalOpen}
+        onSuccess={fetchUsers}
       />
     </div>
   );

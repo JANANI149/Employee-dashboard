@@ -1,6 +1,6 @@
-import { api } from "@/services/api";
+import { api } from "../services/api";
 import type { IAuditLogRepository } from "./interfaces";
-import type { AuditLog } from "@/types";
+import type { AuditLog } from "../types";
 
 export class ApiAuditLogRepository implements IAuditLogRepository {
   async list(): Promise<AuditLog[]> {

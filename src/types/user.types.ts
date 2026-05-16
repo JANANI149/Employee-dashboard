@@ -1,7 +1,7 @@
 /**
  * Extended user schema for Bugspace Pro.
  * This file holds the canonical frontend User type with all fields.
- * Import from here for user-specific features; import from "@/types" for shared types.
+ * Import from here for user-specific features; import from "./" for shared types.
  */
 import type { Role } from "./index";
 

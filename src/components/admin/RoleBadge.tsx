@@ -1,8 +1,8 @@
 /**
  * RoleBadge — coloured pill showing a user's role.
  */
-import type { Role } from "@/types";
-import { cn } from "@/lib/utils";
+import type { Role } from "../../types";
+import { cn } from "../../lib/utils";
 
 const roleStyles: Record<Role, string> = {
   admin:      "bg-violet-500/15 text-violet-300 border-violet-500/30",

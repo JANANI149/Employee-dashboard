@@ -42,6 +42,10 @@ export class InMemoryUserRepository implements IUserRepository {
     return db.filter((u) => u.orgId === orgId);
   }
 
+  async listAll() {
+    return [...db];
+  }
+
   async getById(id: string) {
     return db.find((u) => u.id === id) ?? null;
   }
@@ -54,6 +58,13 @@ export class InMemoryUserRepository implements IUserRepository {
     const user = db.find((u) => u.id === userId && u.orgId === orgId);
     if (!user) return null;
     user.role = role;
+    return user;
+  }
+
+  async updateOrg(userId: string, orgId: string) {
+    const user = db.find((u) => u.id === userId);
+    if (!user) return null;
+    user.orgId = orgId;
     return user;
   }
 
@@ -79,5 +90,16 @@ export class InMemoryUserRepository implements IUserRepository {
     };
     db.push(user);
     return user;
+  }
+
+  async bulkCreate(users: Array<Omit<User, "id" | "createdAt">>): Promise<void> {
+    const now = new Date().toISOString();
+    users.forEach((u) => {
+      db.push({
+        ...u,
+        id: `u-${Math.random().toString(36).substr(2, 9)}`,
+        createdAt: now,
+      });
+    });
   }
 }

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WaitingApprovalRouteImport } from './routes/waiting-approval'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LandingRouteImport } from './routes/landing'
@@ -30,6 +31,11 @@ import { Route as AppReportsReportIdRouteImport } from './routes/_app.reports.$r
 const WaitingApprovalRoute = WaitingApprovalRouteImport.update({
   id: '/waiting-approval',
   path: '/waiting-approval',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
@@ -232,11 +238,19 @@ export interface RootRouteChildren {
   LandingRoute: typeof LandingRoute
   LoginRoute: typeof LoginRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
+  BlogRoute: typeof BlogRoute
   WaitingApprovalRoute: typeof WaitingApprovalRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/waiting-approval': {
       id: '/waiting-approval'
       path: '/waiting-approval'
@@ -405,6 +419,7 @@ const rootRouteChildren: RootRouteChildren = {
   LandingRoute: LandingRoute,
   LoginRoute: LoginRoute,
   UnauthorizedRoute: UnauthorizedRoute,
+  BlogRoute: BlogRoute,
   WaitingApprovalRoute: WaitingApprovalRoute,
 }
 export const routeTree = rootRouteImport

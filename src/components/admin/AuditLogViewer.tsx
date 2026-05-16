@@ -10,10 +10,10 @@
  */
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { auditLogRepository } from "@/repositories/ApiAuditLogRepository";
-import type { AuditLog } from "@/types";
+import { auditLogRepository } from "../../repositories/ApiAuditLogRepository";
+import type { AuditLog } from "../../types";
 import { Search, RefreshCw, Clock, ShieldAlert, ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
 
 const ITEMS_PER_PAGE = 5;
 

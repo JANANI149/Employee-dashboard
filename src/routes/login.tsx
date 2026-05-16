@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { useAuth } from "@/store/auth";
+import { useAuth } from "../store/auth";
 import { ShieldAlert, Chrome, Loader2, ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,

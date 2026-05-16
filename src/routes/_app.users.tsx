@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { UserManagementTable } from "@/components/admin/UserManagementTable";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { UserManagementTable } from "../components/admin/UserManagementTable";
+import { ProtectedRoute } from "../components/ProtectedRoute";
 import { Users } from "lucide-react";
 
 export const Route = createFileRoute("/_app/users")({

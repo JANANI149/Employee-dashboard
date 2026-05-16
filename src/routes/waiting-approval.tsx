@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useAuth } from "@/store/auth";
+import { useAuth } from "../store/auth";
 import { Clock, ShieldAlert, LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 
 export const Route = createFileRoute("/waiting-approval")({
   component: WaitingApprovalPage,

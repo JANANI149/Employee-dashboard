@@ -1,6 +1,6 @@
-import { api } from "@/services/api";
+import { api } from "../services/api";
 import type { IOrganizationRepository } from "./interfaces";
-import type { Organization } from "@/types";
+import type { Organization } from "../types";
 
 export class ApiOrganizationRepository implements IOrganizationRepository {
   async list(): Promise<Organization[]> {

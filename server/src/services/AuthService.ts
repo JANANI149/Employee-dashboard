@@ -38,8 +38,14 @@ export class AuthService {
       ? allowedEmails.some(e => e.toLowerCase() === decoded.email?.toLowerCase())
       : false;
 
+    if (!user && decoded.email) {
+      // Step 3.5: If user doesn't exist by UID or Email, it might be a pre-registered user
+      // with a placeholder ID. Check by email again to be absolutely sure.
+      user = await this.userRepo.getByEmail(decoded.email);
+    }
+
     if (!user) {
-      // Step 3: First login — create a new user record.
+      // Step 4: First login — create a new user record.
       if (isAdminEmail) {
         // Known admin email → assign admin role immediately
         user = await this.userRepo.create({
@@ -51,18 +57,30 @@ export class AuthService {
           status: "active",
         });
       } else {
-        // Regular user → no role, needs admin approval
-        user = await this.userRepo.create({
+        // Regular user not in the DB and not an admin -> Return inactive placeholder
+        // This allows them to stay authenticated but restricted to public/blog pages.
+        user = {
           id: decoded.uid,
-          name: decoded.name ?? decoded.email?.split("@")[0] ?? "User",
+          name: decoded.name ?? decoded.email?.split("@")[0] ?? "Guest",
           email: decoded.email ?? "",
-          role: undefined as any, // NO ROLE - needs admin approval
-          orgId: "org-1",
-          status: "inactive", // Inactive until admin approves
-        });
+          role: "" as any,
+          orgId: "none",
+          status: "inactive",
+        };
       }
+    } else if (user.status === "inactive" && user.role) {
+      // Step 5: Pre-registered user (has role but inactive).
+      // Update with Firebase UID and activate.
+      const db = admin.firestore();
+      await db.collection("users").doc(user.id).delete(); // Remove placeholder/old record
+      user = await this.userRepo.create({
+        ...user,
+        id: decoded.uid,
+        name: decoded.name ?? user.name,
+        status: "active",
+      });
     } else if ((!user.role || user.status === "inactive") && isAdminEmail) {
-      // Step 4: Existing user with no role but is a known admin email → auto-upgrade
+      // Step 6: Existing user with no role but is a known admin email → auto-upgrade
       user = (await this.userRepo.updateRole(user.orgId, user.id, "admin")) ?? user;
     }
 
