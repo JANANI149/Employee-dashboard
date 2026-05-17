@@ -5,7 +5,7 @@
  * Use this wherever a redirect-after-login is needed so the logic
  * lives in one place and is easy to change.
  */
-import type { Role } from "@/types";
+import type { Role } from "../types";
 
 export const ROLE_DASHBOARD: Record<Role, string> = {
   admin: "/admin",

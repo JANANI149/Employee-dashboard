@@ -9,8 +9,8 @@
  * token — Firebase refreshes it automatically in the background.
  */
 import axios from "axios";
-import { getIdToken } from "@/lib/googleAuth";
-import { useAuth } from "@/store/auth";
+import { getIdToken } from "../lib/googleAuth";
+import { useAuth } from "../store/auth";
 
 export const api = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL ?? ""}/api`,

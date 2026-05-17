@@ -1,5 +1,5 @@
-import { api } from "@/services/api";
-import type { Program } from "@/types";
+import { api } from "../services/api";
+import type { Program } from "../types";
 import type { IProgramRepository } from "./interfaces";
 
 export class ApiProgramRepository implements IProgramRepository {

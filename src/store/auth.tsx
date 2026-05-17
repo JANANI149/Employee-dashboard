@@ -13,10 +13,10 @@
 import React, { useEffect } from "react";
 import { create } from "zustand";
 import type { User as FirebaseUser } from "firebase/auth";
-import { signInWithGoogle, signOut, onAuthChange, getIdToken } from "@/lib/googleAuth";
-import type { User } from "@/types";
-import { api } from "@/services/api";
-import { db } from "@/lib/firebase";
+import { signInWithGoogle, signOut, onAuthChange, getIdToken } from "../lib/googleAuth";
+import type { User } from "../types";
+import { api } from "../services/api";
+import { db } from "../lib/firebase";
 import { doc, getDoc, collection, query, where, limit, getDocs } from "firebase/firestore";
 
 
@@ -98,9 +98,11 @@ export const useAuth = create<AuthState>()((set) => ({
       }
 
       set({ appUser, loading: false, error: null });
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Failed to load user profile";
-      console.error("[Auth] Backend sync failed, falling back to Firestore:", message);
+    } catch (err: any) {
+      const message = err.response?.data?.error || err.message || "Failed to load user profile";
+      console.error("[Auth] Backend sync failed:", message);
+
+
 
       // Fallback: read role directly from Firestore if backend is unavailable (e.g. cold start)
       try {

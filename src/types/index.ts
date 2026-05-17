@@ -34,6 +34,12 @@ export interface Organization {
   status?: "active" | "inactive";
   createdAt: string;
   createdBy: string;
+  counts?: {
+    manager: number;
+    researcher: number;
+    employee: number;
+    total: number;
+  };
 }
 
 export interface AuditLog {

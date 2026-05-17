@@ -1,5 +1,5 @@
-import { api } from "@/services/api";
-import type { Report, Comment } from "@/types";
+import { api } from "../services/api";
+import type { Report, Comment } from "../types";
 import type { IReportRepository } from "./interfaces";
 
 export class ApiReportRepository implements IReportRepository {

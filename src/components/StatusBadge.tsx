@@ -1,5 +1,5 @@
-import type { ReportStatus } from "@/types";
-import { cn } from "@/lib/utils";
+import type { ReportStatus } from "../types";
+import { cn } from "../lib/utils";
 
 const styles: Record<ReportStatus, string> = {
   New: "bg-blue-500/15 text-blue-300 border-blue-500/30",

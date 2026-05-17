@@ -2,9 +2,9 @@
  * OrgRegistrationForm — admin-only organization creation form.
  */
 import { useState } from "react";
-import { api } from "@/services/api";
-import type { Organization } from "@/types";
-import { Button } from "@/components/ui/button";
+import { api } from "../../services/api";
+import type { Organization } from "../../types";
+import { Button } from "../ui/button";
 import { Building2, Loader2, CheckCircle2 } from "lucide-react";
 
 interface FormValues {

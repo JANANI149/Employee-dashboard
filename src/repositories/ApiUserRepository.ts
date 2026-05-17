@@ -1,6 +1,6 @@
-import { api } from "@/services/api";
+import { api } from "../services/api";
 import type { IUserRepository } from "./interfaces";
-import type { User, Role } from "@/types";
+import type { User, Role } from "../types";
 
 export class ApiUserRepository implements IUserRepository {
   async list(): Promise<User[]> {
@@ -26,6 +26,15 @@ export class ApiUserRepository implements IUserRepository {
     const users = await this.list();
     // Filter users without assigned roles or with pending status
     return users.filter(user => !user.role || user.status === 'inactive');
+  }
+
+  async create(userData: { name: string; email: string; role: Role }): Promise<User> {
+    const { data } = await api.post<User>("/users", userData);
+    return data;
+  }
+
+  async bulkCreate(users: Array<{ name: string; email: string; role: Role }>): Promise<void> {
+    await api.post("/users/bulk", { users });
   }
 }
 

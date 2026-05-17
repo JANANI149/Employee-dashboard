@@ -8,6 +8,9 @@ export class InMemoryProgramRepository implements IProgramRepository {
   async list(orgId: string) {
     return db.filter((p) => p.orgId === orgId);
   }
+  async listAll() {
+    return [...db];
+  }
   async get(orgId: string, id: string) {
     return db.find((p) => p.id === id && p.orgId === orgId) ?? null;
   }

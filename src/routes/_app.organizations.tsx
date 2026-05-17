@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { OrgRegistrationForm } from "@/components/admin/OrgRegistrationForm";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { OrgRegistrationForm } from "../components/admin/OrgRegistrationForm";
+import { ProtectedRoute } from "../components/ProtectedRoute";
 import { Building2 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/organizations")({

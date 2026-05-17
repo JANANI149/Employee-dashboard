@@ -1,11 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { OverviewStats } from "@/components/admin/OverviewStats";
-import { OrganizationManagement } from "@/components/admin/OrganizationManagement";
-import { UserManagementTable } from "@/components/admin/UserManagementTable";
-import { PendingApprovals } from "@/components/admin/PendingApprovals";
-import { AuditLogViewer } from "@/components/admin/AuditLogViewer";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Building2, Clock, FileText } from "lucide-react";
+import { OverviewStats } from "../components/admin/OverviewStats";
+import { OrganizationManagement } from "../components/admin/OrganizationManagement";
+import { UserManagementTable } from "../components/admin/UserManagementTable";
+import { AuditLogViewer } from "../components/admin/AuditLogViewer";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import { Shield, Users, Building2, Clock, FileText, UserPlus } from "lucide-react";
 
 export const Route = createFileRoute("/_app/admin")({
   component: AdminDashboard,
@@ -27,14 +26,10 @@ function AdminDashboard() {
       {/* Main Content Tabs */}
       <Tabs defaultValue="users" className="space-y-6">
         <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
-          <TabsList className="grid grid-cols-4 min-w-[400px] sm:min-w-0 sm:w-full lg:w-auto">
+          <TabsList className="grid grid-cols-3 min-w-[300px] sm:min-w-0 sm:w-full lg:w-auto">
             <TabsTrigger value="users" className="gap-1 sm:gap-2 text-xs sm:text-sm">
               <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               Users
-            </TabsTrigger>
-            <TabsTrigger value="pending" className="gap-1 sm:gap-2 text-xs sm:text-sm">
-              <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              Pending
             </TabsTrigger>
             <TabsTrigger value="organizations" className="gap-1 sm:gap-2 text-xs sm:text-sm">
               <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
@@ -57,10 +52,6 @@ function AdminDashboard() {
             </p>
           </div>
           <UserManagementTable />
-        </TabsContent>
-
-        <TabsContent value="pending" className="space-y-4">
-          <PendingApprovals />
         </TabsContent>
 
         <TabsContent value="organizations" className="space-y-4">

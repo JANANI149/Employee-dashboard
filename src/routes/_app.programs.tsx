@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { programRepository } from "@/repositories/ApiProgramRepository";
-import type { Program } from "@/types";
+import { programRepository } from "../repositories/ApiProgramRepository";
+import type { Program } from "../types";
 
 export const Route = createFileRoute("/_app/programs")({
   component: ProgramsPage,

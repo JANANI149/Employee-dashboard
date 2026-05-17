@@ -20,4 +20,8 @@ export class InMemoryAuditLogRepository implements IAuditLogRepository {
       .filter((l) => l.orgId === orgId)
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt)); // newest first
   }
+ 
+  async listAll() {
+    return [...db].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  }
 }

@@ -26,6 +26,16 @@ export class FirestoreUserRepository implements IUserRepository {
     }
   }
 
+  async listAll(): Promise<User[]> {
+    try {
+      const snapshot = await usersCollection.get();
+      return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as User));
+    } catch (error) {
+      console.error('[FirestoreUserRepository] Error listing all users:', error);
+      throw error;
+    }
+  }
+
   async getById(id: string): Promise<User | null> {
     const doc = await usersCollection.doc(id).get();
     if (!doc.exists) return null;
@@ -55,6 +65,14 @@ export class FirestoreUserRepository implements IUserRepository {
     });
     
     return { ...user, role, status: "active" };
+  }
+
+  async updateOrg(userId: string, orgId: string): Promise<User | null> {
+    const docRef = usersCollection.doc(userId);
+    const doc = await docRef.get();
+    if (!doc.exists) return null;
+    await docRef.update({ orgId });
+    return { id: doc.id, ...doc.data(), orgId } as User;
   }
 
   async updateStatus(orgId: string, userId: string, status: "active" | "inactive"): Promise<User | null> {
@@ -96,5 +114,21 @@ export class FirestoreUserRepository implements IUserRepository {
       const docRef = await usersCollection.add(user);
       return { ...user, id: docRef.id } as User;
     }
+  }
+
+  async bulkCreate(users: Array<Omit<User, "id" | "createdAt">>): Promise<void> {
+    const batch = db.batch();
+    const now = new Date().toISOString();
+
+    users.forEach((userData) => {
+      const docRef = usersCollection.doc(); // Auto-generated ID
+      batch.set(docRef, {
+        ...userData,
+        createdAt: now,
+        status: "inactive", // Status remains inactive until first login
+      });
+    });
+
+    await batch.commit();
   }
 }

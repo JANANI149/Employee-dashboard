@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { reportRepository } from "@/repositories/ApiReportRepository";
-import type { Report } from "@/types";
+import { reportRepository } from "../repositories/ApiReportRepository";
+import type { Report } from "../types";
 import { StatusBadge } from "./StatusBadge";
 
 const placeholder: Report[] = [

@@ -1,4 +1,4 @@
-import type { Program, Report, Comment, User, Organization, AuditLog, Role } from "@/types";
+import type { Program, Report, Comment, User, Organization, AuditLog, Role } from "../types";
 
 export interface IAuthRepository {
   login(idToken: string): Promise<{ user: User }>;
@@ -11,6 +11,8 @@ export interface IUserRepository {
   updateRole(id: string, role: Role): Promise<User>;
   delete(id: string): Promise<void>;
   getPending(): Promise<User[]>;
+  create(userData: { name: string; email: string; role: Role }): Promise<User>;
+  bulkCreate(users: Array<{ name: string; email: string; role: Role }>): Promise<void>;
 }
 
 export interface IOrganizationRepository {

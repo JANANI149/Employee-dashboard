@@ -17,9 +17,9 @@
 import React from "react";
 import { useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useAuth } from "@/store/auth";
-import { isRoleAllowed } from "@/lib/roleRedirect";
-import type { Role } from "@/types";
+import { useAuth } from "../store/auth";
+import { isRoleAllowed } from "../lib/roleRedirect";
+import type { Role } from "../types";
 import { Loader2 } from "lucide-react";
 
 interface ProtectedRouteProps {

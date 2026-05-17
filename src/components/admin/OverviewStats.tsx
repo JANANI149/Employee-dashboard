@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { Users, Building2, Target, FileText, AlertTriangle } from "lucide-react";
-import { userRepository } from "@/repositories/ApiUserRepository";
-import { organizationRepository } from "@/repositories/ApiOrganizationRepository";
-import { reportRepository } from "@/repositories/ApiReportRepository";
-import { Skeleton } from "@/components/ui/skeleton";
+import { userRepository } from "../../repositories/ApiUserRepository";
+import { organizationRepository } from "../../repositories/ApiOrganizationRepository";
+import { reportRepository } from "../../repositories/ApiReportRepository";
+import { Skeleton } from "../ui/skeleton";
 
 export function OverviewStats() {
   const { data: users, isLoading: usersLoading } = useQuery({

@@ -2,7 +2,7 @@
  * ConfirmModal — generic confirmation dialog.
  * Used before destructive operations (delete user, etc.)
  */
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
 import { AlertTriangle, X } from "lucide-react";
 
 interface ConfirmModalProps {

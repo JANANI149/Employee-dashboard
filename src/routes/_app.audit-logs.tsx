@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AuditLogViewer } from "@/components/admin/AuditLogViewer";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { AuditLogViewer } from "../components/admin/AuditLogViewer";
+import { ProtectedRoute } from "../components/ProtectedRoute";
 import { ClipboardList } from "lucide-react";
 
 export const Route = createFileRoute("/_app/audit-logs")({

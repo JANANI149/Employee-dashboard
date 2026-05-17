@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import { 
   ShieldAlert, 
   Lock, 
@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/landing")({
+export const Route = createFileRoute("/home")({
   component: LandingPage,
 });
 

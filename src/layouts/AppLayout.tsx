@@ -1,10 +1,10 @@
 import { Link, Outlet, useNavigate, useLocation } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/store/auth";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { useAuth } from "../store/auth";
+import { cn } from "../lib/utils";
+import { Button } from "../components/ui/button";
 import { Loader2, ShieldAlert, LogOut, Menu, X } from "lucide-react";
-import type { Role } from "@/types";
+import type { Role } from "../types";
 
 const navByRole: Record<Role, { to: string; label: string }[]> = {
   admin: [

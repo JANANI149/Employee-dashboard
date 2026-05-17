@@ -5,7 +5,7 @@ import {
   createRootRouteWithContext,
   useRouter,
 } from "@tanstack/react-router";
-import { AuthProvider } from "@/store/auth";
+import { AuthProvider } from "../store/auth";
 
 // Note: HeadContent / Scripts / shellComponent are SSR-only TanStack Start APIs.
 // In SPA mode the <head> is managed by index.html directly, so they are omitted.

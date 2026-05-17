@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { userRepository } from "@/repositories/ApiUserRepository";
-import type { Role } from "@/types";
+import { userRepository } from "../../repositories/ApiUserRepository";
+import type { Role } from "../../types";
 import {
   Table,
   TableBody,
@@ -9,23 +9,25 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "../ui/table";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { CheckCircle2, Clock } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+} from "../ui/select";
+import { Button } from "../ui/button";
+import { CheckCircle2, Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import { Skeleton } from "../ui/skeleton";
 import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "../ui/badge";
 
 export function PendingApprovals() {
   const queryClient = useQueryClient();
   const [selectedRoles, setSelectedRoles] = useState<Record<string, Role>>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 5;
 
   const { data: pendingUsers, isLoading } = useQuery({
     queryKey: ["pending-users"],
@@ -68,6 +70,15 @@ export function PendingApprovals() {
     }
     approveMutation.mutate({ userId, role });
   };
+
+  const totalPages = Math.ceil((pendingUsers?.length || 0) / ITEMS_PER_PAGE);
+  const paginatedPending = (pendingUsers || []).slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const startIdx = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+  const endIdx = Math.min(currentPage * ITEMS_PER_PAGE, pendingUsers?.length || 0);
 
   if (isLoading) {
     return (
@@ -133,7 +144,7 @@ export function PendingApprovals() {
           </TableHeader>
           <TableBody>
             {pendingUsers && pendingUsers.length > 0 ? (
-              pendingUsers.map((user) => (
+              paginatedPending.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell className="font-medium">{user.name}</TableCell>
                   <TableCell className="text-muted-foreground">{user.email}</TableCell>
@@ -182,6 +193,62 @@ export function PendingApprovals() {
           </TableBody>
         </Table>
       </div>
+
+      {/* Pagination */}
+      {!isLoading && pendingUsers && pendingUsers.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-2">
+          <p className="text-xs text-muted-foreground">
+            Showing <span className="font-medium text-foreground">{startIdx}</span> to{" "}
+            <span className="font-medium text-foreground">{endIdx}</span> of{" "}
+            <span className="font-medium text-foreground">{pendingUsers.length}</span> pending
+          </p>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <div className="flex items-center gap-1">
+              {[...Array(totalPages)].map((_, i) => {
+                const page = i + 1;
+                if (
+                  totalPages > 5 &&
+                  page !== 1 &&
+                  page !== totalPages &&
+                  Math.abs(page - currentPage) > 1
+                ) {
+                  if (page === 2 || page === totalPages - 1) return <span key={page} className="text-muted-foreground px-1">...</span>;
+                  return null;
+                }
+                return (
+                  <Button
+                    key={page}
+                    variant={currentPage === page ? "default" : "outline"}
+                    size="sm"
+                    className="h-8 w-8 text-xs p-0"
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </Button>
+                );
+              })}
+            </div>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,15 +1,27 @@
 import type { IUserRepository } from "../interfaces/IUserRepository.js";
-import type { Role } from "../types/index.js";
+import type { IAuditLogRepository } from "../interfaces/IAuditLogRepository.js";
+import type { Role, User } from "../types/index.js";
 
 export class UserService {
-  constructor(private repo: IUserRepository) {}
+  constructor(
+    private repo: IUserRepository,
+    private auditRepo: IAuditLogRepository
+  ) {}
 
   listByOrg(orgId: string) {
     return this.repo.listByOrg(orgId);
   }
 
+  listAll() {
+    return this.repo.listAll();
+  }
+
   getById(id: string) {
     return this.repo.getById(id);
+  }
+
+  async updateOrg(userId: string, orgId: string) {
+    return this.repo.updateOrg(userId, orgId);
   }
 
   /**
@@ -43,5 +55,52 @@ export class UserService {
       throw new Error("You cannot delete your own account.");
     }
     return this.repo.remove(orgId, targetUserId);
+  }
+
+  /**
+   * Admin-only: pre-register a single user.
+   */
+  async create(orgId: string, userData: { name: string; email: string; role: Role }, requesterId: string) {
+    const user = await this.repo.create({
+      ...userData,
+      orgId,
+      status: "inactive",
+    });
+
+    await this.auditRepo.append({
+      orgId,
+      actorId: requesterId,
+      actorName: requesterId,
+      action: "USER_INVITED",
+      targetType: "user",
+      targetId: user.id,
+      targetName: user.name,
+      metadata: { role: userData.role },
+    });
+
+    return user;
+  }
+
+  /**
+   * Admin-only: pre-register multiple users via bulk upload.
+   */
+  async bulkCreate(orgId: string, users: Array<{ name: string; email: string; role: Role }>, requesterId: string) {
+    const usersToCreate = users.map(u => ({
+      ...u,
+      orgId,
+      status: "inactive" as const,
+    }));
+
+    await this.repo.bulkCreate(usersToCreate);
+
+    await this.auditRepo.append({
+      orgId,
+      actorId: requesterId,
+      actorName: requesterId,
+      action: "USERS_BULK_UPLOADED",
+      targetType: "user",
+      targetId: "multiple",
+      metadata: { count: users.length },
+    });
   }
 }

@@ -5,7 +5,13 @@ import { programRepo } from "../repositories/index.js";
 const service = new ProgramService(programRepo);
 
 export const ProgramController = {
-  list: async (req: Request, res: Response) => res.json(await service.list(req.orgId!)),
+  list: async (req: Request, res: Response) => {
+    // Admin sees all programs; others see only their org
+    const programs = req.user!.role === "admin" 
+      ? await service.listAll() 
+      : await service.list(req.orgId!);
+    return res.json(programs);
+  },
 
   get: async (req: Request, res: Response) => {
     const p = await service.get(req.orgId!, req.params.id);
