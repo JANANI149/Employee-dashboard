@@ -11,7 +11,7 @@ import {
 import EmployeeStatCard from "@/components/EmployeeStatCard";
 import { mockEmployeeReports } from "@/mocks/mockEmployeeReports";
 
-export const Route = createFileRoute("/_app/employee")({
+export const Route = createFileRoute("/employee/")({
   component: EmployeeDashboard,
 });
 
@@ -40,66 +40,7 @@ function EmployeeDashboard() {
   return (
     <div className="flex min-h-screen bg-[#f5f7fb] overflow-hidden">
 
-      {/* Sidebar */}
-      <aside className="hidden md:flex md:w-60 bg-[#050816] text-white flex-col">
-
-        {/* Logo */}
-        <div className="h-16 flex items-center px-6 border-b border-white/10">
-
-          <div className="w-10 h-10 rounded-xl bg-[#7c3aed] flex items-center justify-center font-bold text-lg">
-            B
-          </div>
-
-          <div className="ml-3">
-            <h1 className="text-lg font-bold leading-none">
-              BugSpace
-            </h1>
-
-            <p className="text-xs text-gray-400 mt-1">
-              Employee Portal
-            </p>
-          </div>
-
-        </div>
-
-        {/* Menu */}
-        <nav className="flex-1 p-4 space-y-2">
-
-          <Link
-            to="/employee"
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-[#7c3aed] text-white transition-all duration-200 shadow-sm"
-          >
-            <LayoutDashboard size={20} />
-            <span className="font-medium">Dashboard</span>
-          </Link>
-
-          <Link
-            to="/employee/reports"
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/5 hover:text-white transition-all duration-200"
-          >
-            <FileText size={20} />
-            <span className="font-medium">Assigned Reports</span>
-          </Link>
-
-          <Link
-            to="/employee/programs"
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/5 hover:text-white transition-all duration-200"
-          >
-            <FolderKanban size={20} />
-            <span className="font-medium">Programs</span>
-          </Link>
-
-          <Link
-            to="/employee/profile"
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/5 hover:text-white transition-all duration-200"
-          >
-            <User size={20} />
-            <span className="font-medium">Profile</span>
-          </Link>
-
-        </nav>
-
-      </aside>
+      
 
       {/* Main Content */}
       <div className="flex-1">

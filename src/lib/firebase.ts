@@ -17,9 +17,19 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
-
+console.log("API KEY:", import.meta.env.VITE_FIREBASE_API_KEY);
 // Guard against re-initialization in dev HMR or SSR environments.
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+
+let app;
+
+try {
+  app = getApps().length === 0
+    ? initializeApp(firebaseConfig)
+    : getApps()[0];
+} catch (error) {
+  console.error("Firebase Init Error:", error);
+}
+
 
 export const firebaseAuth = getAuth(app);
 export const db = getFirestore(app);

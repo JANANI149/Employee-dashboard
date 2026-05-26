@@ -20,10 +20,16 @@ function Index() {
       navigate({ to: "/home" });
     } else if (!appUser || !appUser.role || appUser.status === "inactive") {
       // Logged in but no role assigned or inactive - redirect to blog
-      navigate({ to: "/blog" as any });
+      navigate({ to: "/blog" });
     } else {
       // Logged in with role - redirect to role dashboard
-      navigate({ to: `/${appUser.role}` as any });
+      const roles: Record<string, any> = {
+        admin: "/admin",
+        manager: "/manager",
+        researcher: "/researcher",
+        employee: "/employee",
+      };
+      navigate({ to: roles[appUser.role] || "/" });
     }
   }, [appUser, firebaseUser, loading, navigate]);
 

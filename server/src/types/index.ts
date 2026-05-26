@@ -6,6 +6,7 @@ export interface AuthUser {
   name: string;
   role: Role;
   orgId: string;
+  assignedPrograms?: string[];
 }
 
 export interface Organization {
@@ -24,6 +25,7 @@ export interface User {
   email: string;
   role: Role;
   orgId: string;
+  assignedPrograms?: string[];
   status?: "active" | "inactive";
   createdAt: string;
 }

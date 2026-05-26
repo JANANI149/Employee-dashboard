@@ -5,9 +5,15 @@ import { reportRepo } from "../repositories/index.js";
 const service = new ReportService(reportRepo);
 
 export const ReportController = {
-  list: async (req: Request, res: Response) => res.json(await service.list(req.orgId!)),
+  list: async (req: Request, res: Response) => {
+    console.log("USER:", req.user);
+    console.log("ORG:", req.orgId);
+    const data = await reportRepo.list("org-1");
+    console.log("BACKEND REPORTS:", data);
+    return res.json(data);
+  },
 
-  get: async (req: Request, res: Response) => {
+get: async (req: Request, res: Response) => {
     const r = await service.get(req.orgId!, req.params.id);
     if (!r) return res.status(404).json({ error: "Not found" });
     res.json(r);

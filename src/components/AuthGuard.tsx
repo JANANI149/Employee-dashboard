@@ -13,47 +13,50 @@
  *     <ProtectedPage />
  *   </AuthGuard>
  */
+
 import { useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useAuth } from "../store/auth";
-import type { Role } from "../types";
+import { useAuth } from "@/store/auth";
+import type { Role } from "@/types";
 
 interface AuthGuardProps {
-  children: React.ReactNode;
-  /** If provided, the user's role must be in this list. */
-  allowedRoles?: Role[];
+children: React.ReactNode;
+/** If provided, the user's role must be in this list. */
+allowedRoles?: Role[];
 }
 
 export function AuthGuard({ children, allowedRoles }: AuthGuardProps) {
-  const { appUser, loading } = useAuth();
-  const navigate = useNavigate();
+const { appUser, loading } = useAuth();
+const navigate = useNavigate();
 
-  useEffect(() => {
-    if (loading) return;
-    if (!appUser) {
-      navigate({ to: "/login" });
-      return;
-    }
-    if (allowedRoles && !allowedRoles.includes(appUser.role)) {
-      // User is authenticated but not authorized for this section.
-      // Redirect them to their own dashboard.
-      navigate({ to: `/${appUser.role}` as any });
-    }
-  }, [appUser, loading, allowedRoles, navigate]);
+useEffect(() => {
+if (loading) return;
+if (!appUser) {
+navigate({ to: "/login" });
+return;
+}
+if (allowedRoles && !allowedRoles.includes(appUser.role)) {
+// User is authenticated but not authorized for this section.
+// Redirect them to their own dashboard.
+navigate({ to: /${appUser.role} as any });
+}
+}, [appUser, loading, allowedRoles, navigate]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-3">
-          <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-          <p className="text-sm text-muted-foreground">Loading…</p>
-        </div>
-      </div>
-    );
-  }
+if (loading) {
+return (
+<div className="min-h-screen flex items-center justify-center bg-background">
+<div className="flex flex-col items-center gap-3">
+<div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+<p className="text-sm text-muted-foreground">Loading…</p>
+</div>
+</div>
+);
+}
 
-  if (!appUser) return null;
-  if (allowedRoles && !allowedRoles.includes(appUser.role)) return null;
+if (!appUser) { 
+  return <>{children}</>
+}
+if (allowedRoles && !allowedRoles.includes(appUser.role)) return null;
 
-  return <>{children}</>;
+return <>{children}</>;
 }

@@ -78,7 +78,7 @@ function ReportDetails() {
         </div>
         <div className="bg-card border border-border rounded-lg p-5">
           <h2 className="font-medium mb-2">Description</h2>
-          <p className="text-sm text-muted-foreground whitespace-pre-wrap">{report.description}</p>
+          <p className="text-sm text-muted-foreground whitespace-pre-wrap">{report.description || "No description available"}</p>
         </div>
         <div className="bg-card border border-border rounded-lg p-5">
           <h2 className="font-medium mb-4">Activity</h2>

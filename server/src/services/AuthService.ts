@@ -102,6 +102,9 @@ export class AuthService {
     const email = `${role}@bugspace.io`;
     const user = await this.userRepo.getByEmail(email);
     if (!user) throw new Error("Demo user not found for role: " + role);
+    if (user.role !== "employee") {
+      user.assignedPrograms = ["program-1"];
+    }
     return { user };
   }
 

@@ -35,7 +35,7 @@ function LoginPage() {
 
       {/* Back to Landing Page - Top Left */}
       <div className="absolute top-6 left-6 z-10">
-        <Link to={"/home" as any}>
+        <Link to="/home">
           <Button variant="ghost" className="gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100">
             <ArrowLeft className="h-4 w-4" />
             Back to Landing Page

@@ -4,7 +4,7 @@ import { BookOpen, Calendar, Clock, ArrowRight, Shield, Bug, Search } from "luci
 import { Button } from "../components/ui/button";
 import { useAuth } from "../store/auth";
 
-export const Route = createFileRoute("/blog" as any)({
+export const Route = createFileRoute("/blog")({
   component: BlogPage,
 });
 
@@ -59,8 +59,8 @@ function BlogPage() {
             <span>Bugspace<span className="text-muted-foreground">Pro</span></span>
           </div>
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
-            <Link to={"/home" as any} className="hover:text-primary transition-colors">Home</Link>
-            <Link to={"/blog" as any} className="text-primary transition-colors border-b-2 border-primary pb-5 mt-5">Blog</Link>
+            <Link to="/home" className="hover:text-primary transition-colors">Home</Link>
+            <Link to="/blog" className="text-primary transition-colors border-b-2 border-primary pb-5 mt-5">Blog</Link>
             <a href="#" className="hover:text-primary transition-colors">About</a>
             <a href="#" className="hover:text-primary transition-colors">Contact</a>
           </div>

@@ -9,8 +9,6 @@
  * token — Firebase refreshes it automatically in the background.
  */
 import axios from "axios";
-import { getIdToken } from "../lib/googleAuth";
-import { useAuth } from "../store/auth";
 
 export const api = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL ?? ""}/api`,
@@ -20,15 +18,9 @@ export const api = axios.create({
 api.interceptors.request.use(async (config) => {
   if (typeof window === "undefined") return config;
 
-  // Always get a fresh token — Firebase refreshes it under the hood if expired.
-  const token = await getIdToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  // Get orgId from auth store
-  const orgId = useAuth.getState().appUser?.orgId;
-  if (orgId) config.headers["x-org-id"] = orgId;
+  // TEMP DEMO AUTH
+  config.headers.Authorization = "Bearer demo.employee.123";
+  config.headers["x-org-id"] = "org-1";
 
   return config;
 });
@@ -36,13 +28,6 @@ api.interceptors.request.use(async (config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // Token expired or invalid — clear store and redirect to login.
-      if (typeof window !== "undefined") {
-        useAuth.getState().signOut();
-        window.location.href = "/login";
-      }
-    }
     return Promise.reject(error);
   },
 );

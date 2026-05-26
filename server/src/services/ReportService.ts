@@ -1,9 +1,25 @@
 import type { IReportRepository } from "../interfaces/IReportRepository.js";
-import type { ReportStatus } from "../types/index.js";
+import type { AuthUser, ReportStatus } from "../types/index.js";
 
 export class ReportService {
   constructor(private repo: IReportRepository) {}
-  list(orgId: string) { return this.repo.list(orgId); }
+  async list(orgId: string, user: AuthUser) {
+    const reports = await this.repo.list(orgId);
+
+  // Admin and manager can see all reports
+    if (user.role === "admin" || user.role === "manager") {
+      return reports;
+  }
+
+  // Employee sees only assigned programs
+    if (user.role === "employee") {
+      return reports.filter((report) =>
+    user.assignedPrograms?.includes(report.programId)
+    );
+  }
+
+  return [];
+}
   get(orgId: string, id: string) { return this.repo.get(orgId, id); }
   create(orgId: string, input: any, reporter: { id: string; name: string }) {
     return this.repo.create(orgId, input, reporter);

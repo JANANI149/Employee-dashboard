@@ -6,8 +6,35 @@ const comments: Comment[] = [];
 
 export class InMemoryReportRepository implements IReportRepository {
   async list(orgId: string) {
-    return reports.filter((r) => r.orgId === orgId);
-  }
+    return [
+      {
+        id: "R-101",
+        title: "Stored XSS in profile",
+        programId: "p1",
+        programName: "Web App",
+        severity: "high",
+        status: "New",
+        reporterId: "u1",
+        reporterName: "Tester",
+        description: "Demo report",
+        createdAt: new Date().toISOString(),
+        orgId: "org-1",
+  },
+      {
+        id: "R-102",
+        title: "IDOR in invoices API",
+        programId: "p2",
+        programName: "Mobile API",
+        severity: "critical",
+        status: "Triaged",
+        reporterId: "u2",
+        reporterName: "Researcher",
+        description: "Sensitive data exposure",
+        createdAt: new Date().toISOString(),
+        orgId: "org-1",
+      },
+    ];
+}
   async get(orgId: string, id: string) {
     return reports.find((r) => r.id === id && r.orgId === orgId) ?? null;
   }

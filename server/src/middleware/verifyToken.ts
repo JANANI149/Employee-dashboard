@@ -23,6 +23,7 @@ export async function verifyToken(
   next: NextFunction,
 ) {
   const auth = req.headers.authorization;
+  console.log("AUTH HEADER:", req.headers.authorization);
   if (!auth?.startsWith("Bearer ")) {
     return res.status(401).json({ error: "Missing or malformed Authorization header." });
   }

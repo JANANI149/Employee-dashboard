@@ -10,12 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WaitingApprovalRouteImport } from './routes/waiting-approval'
-import { Route as BlogRouteImport } from './routes/blog'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AppRouteImport } from './routes/_app'
+import { Route as EmployeeRouteRouteImport } from './routes/employee/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EmployeeIndexRouteImport } from './routes/employee/index'
+import { Route as EmployeeReportsRouteImport } from './routes/employee/reports'
+import { Route as EmployeeProgramsRouteImport } from './routes/employee/programs'
+import { Route as EmployeeProfileRouteImport } from './routes/employee/profile'
 import { Route as AppUsersRouteImport } from './routes/_app.users'
 import { Route as AppResearcherRouteImport } from './routes/_app.researcher'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
@@ -33,11 +38,6 @@ const WaitingApprovalRoute = WaitingApprovalRouteImport.update({
   path: '/waiting-approval',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
   id: '/unauthorized',
   path: '/unauthorized',
@@ -53,14 +53,44 @@ const HomeRoute = HomeRouteImport.update({
   path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmployeeRouteRoute = EmployeeRouteRouteImport.update({
+  id: '/employee',
+  path: '/employee',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const EmployeeIndexRoute = EmployeeIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EmployeeRouteRoute,
+} as any)
+const EmployeeReportsRoute = EmployeeReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => EmployeeRouteRoute,
+} as any)
+const EmployeeProgramsRoute = EmployeeProgramsRouteImport.update({
+  id: '/programs',
+  path: '/programs',
+  getParentRoute: () => EmployeeRouteRoute,
+} as any)
+const EmployeeProfileRoute = EmployeeProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => EmployeeRouteRoute,
 } as any)
 const AppUsersRoute = AppUsersRouteImport.update({
   id: '/users',
@@ -120,44 +150,55 @@ const AppReportsReportIdRoute = AppReportsReportIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/employee': typeof AppEmployeeRoute
+  '/blog': typeof BlogRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/waiting-approval': typeof WaitingApprovalRoute
   '/admin': typeof AppAdminRoute
   '/audit-logs': typeof AppAuditLogsRoute
-  '/employee': typeof AppEmployeeRoute
   '/manager': typeof AppManagerRoute
   '/organizations': typeof AppOrganizationsRoute
   '/programs': typeof AppProgramsRoute
   '/reports': typeof AppReportsRouteWithChildren
   '/researcher': typeof AppResearcherRoute
   '/users': typeof AppUsersRoute
+  '/employee/profile': typeof EmployeeProfileRoute
+  '/employee/programs': typeof EmployeeProgramsRoute
+  '/employee/reports': typeof EmployeeReportsRoute
+  '/employee/': typeof EmployeeIndexRoute
   '/reports/$reportId': typeof AppReportsReportIdRoute
   '/reports/new': typeof AppReportsNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/blog': typeof BlogRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/waiting-approval': typeof WaitingApprovalRoute
   '/admin': typeof AppAdminRoute
   '/audit-logs': typeof AppAuditLogsRoute
-  '/employee': typeof AppEmployeeRoute
+  '/employee': typeof EmployeeIndexRoute
   '/manager': typeof AppManagerRoute
   '/organizations': typeof AppOrganizationsRoute
   '/programs': typeof AppProgramsRoute
   '/reports': typeof AppReportsRouteWithChildren
   '/researcher': typeof AppResearcherRoute
   '/users': typeof AppUsersRoute
+  '/employee/profile': typeof EmployeeProfileRoute
+  '/employee/programs': typeof EmployeeProgramsRoute
+  '/employee/reports': typeof EmployeeReportsRoute
   '/reports/$reportId': typeof AppReportsReportIdRoute
   '/reports/new': typeof AppReportsNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/employee': typeof EmployeeRouteRouteWithChildren
   '/_app': typeof AppRouteWithChildren
+  '/blog': typeof BlogRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/unauthorized': typeof UnauthorizedRoute
@@ -171,6 +212,10 @@ export interface FileRoutesById {
   '/_app/reports': typeof AppReportsRouteWithChildren
   '/_app/researcher': typeof AppResearcherRoute
   '/_app/users': typeof AppUsersRoute
+  '/employee/profile': typeof EmployeeProfileRoute
+  '/employee/programs': typeof EmployeeProgramsRoute
+  '/employee/reports': typeof EmployeeReportsRoute
+  '/employee/': typeof EmployeeIndexRoute
   '/_app/reports/$reportId': typeof AppReportsReportIdRoute
   '/_app/reports/new': typeof AppReportsNewRoute
 }
@@ -178,24 +223,30 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/employee'
+    | '/blog'
     | '/home'
     | '/login'
     | '/unauthorized'
     | '/waiting-approval'
     | '/admin'
     | '/audit-logs'
-    | '/employee'
     | '/manager'
     | '/organizations'
     | '/programs'
     | '/reports'
     | '/researcher'
     | '/users'
+    | '/employee/profile'
+    | '/employee/programs'
+    | '/employee/reports'
+    | '/employee/'
     | '/reports/$reportId'
     | '/reports/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/blog'
     | '/home'
     | '/login'
     | '/unauthorized'
@@ -209,12 +260,17 @@ export interface FileRouteTypes {
     | '/reports'
     | '/researcher'
     | '/users'
+    | '/employee/profile'
+    | '/employee/programs'
+    | '/employee/reports'
     | '/reports/$reportId'
     | '/reports/new'
   id:
     | '__root__'
     | '/'
+    | '/employee'
     | '/_app'
+    | '/blog'
     | '/home'
     | '/login'
     | '/unauthorized'
@@ -228,29 +284,27 @@ export interface FileRouteTypes {
     | '/_app/reports'
     | '/_app/researcher'
     | '/_app/users'
+    | '/employee/profile'
+    | '/employee/programs'
+    | '/employee/reports'
+    | '/employee/'
     | '/_app/reports/$reportId'
     | '/_app/reports/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EmployeeRouteRoute: typeof EmployeeRouteRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
+  BlogRoute: typeof BlogRoute
   HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
-  BlogRoute: typeof BlogRoute
   WaitingApprovalRoute: typeof WaitingApprovalRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/waiting-approval': {
       id: '/waiting-approval'
       path: '/waiting-approval'
@@ -279,11 +333,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app': {
       id: '/_app'
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/employee': {
+      id: '/employee'
+      path: '/employee'
+      fullPath: '/employee'
+      preLoaderRoute: typeof EmployeeRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -292,6 +360,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/employee/': {
+      id: '/employee/'
+      path: '/'
+      fullPath: '/employee/'
+      preLoaderRoute: typeof EmployeeIndexRouteImport
+      parentRoute: typeof EmployeeRouteRoute
+    }
+    '/employee/reports': {
+      id: '/employee/reports'
+      path: '/reports'
+      fullPath: '/employee/reports'
+      preLoaderRoute: typeof EmployeeReportsRouteImport
+      parentRoute: typeof EmployeeRouteRoute
+    }
+    '/employee/programs': {
+      id: '/employee/programs'
+      path: '/programs'
+      fullPath: '/employee/programs'
+      preLoaderRoute: typeof EmployeeProgramsRouteImport
+      parentRoute: typeof EmployeeRouteRoute
+    }
+    '/employee/profile': {
+      id: '/employee/profile'
+      path: '/profile'
+      fullPath: '/employee/profile'
+      preLoaderRoute: typeof EmployeeProfileRouteImport
+      parentRoute: typeof EmployeeRouteRoute
     }
     '/_app/users': {
       id: '/_app/users'
@@ -373,6 +469,24 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface EmployeeRouteRouteChildren {
+  EmployeeProfileRoute: typeof EmployeeProfileRoute
+  EmployeeProgramsRoute: typeof EmployeeProgramsRoute
+  EmployeeReportsRoute: typeof EmployeeReportsRoute
+  EmployeeIndexRoute: typeof EmployeeIndexRoute
+}
+
+const EmployeeRouteRouteChildren: EmployeeRouteRouteChildren = {
+  EmployeeProfileRoute: EmployeeProfileRoute,
+  EmployeeProgramsRoute: EmployeeProgramsRoute,
+  EmployeeReportsRoute: EmployeeReportsRoute,
+  EmployeeIndexRoute: EmployeeIndexRoute,
+}
+
+const EmployeeRouteRouteWithChildren = EmployeeRouteRoute._addFileChildren(
+  EmployeeRouteRouteChildren,
+)
+
 interface AppReportsRouteChildren {
   AppReportsReportIdRoute: typeof AppReportsReportIdRoute
   AppReportsNewRoute: typeof AppReportsNewRoute
@@ -415,11 +529,12 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EmployeeRouteRoute: EmployeeRouteRouteWithChildren,
   AppRoute: AppRouteWithChildren,
+  BlogRoute: BlogRoute,
   HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
   UnauthorizedRoute: UnauthorizedRoute,
-  BlogRoute: BlogRoute,
   WaitingApprovalRoute: WaitingApprovalRoute,
 }
 export const routeTree = rootRouteImport

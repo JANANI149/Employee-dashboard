@@ -39,9 +39,9 @@ export function AppLayout() {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  useEffect(() => {
-    if (!loading && !appUser) navigate({ to: "/login" });
-  }, [appUser, loading, navigate]);
+  //useEffect(() => {
+    //if (!loading && !appUser) navigate({ to: "/login" });
+  //}, [appUser, loading, navigate]);
 
   // Close sidebar on route change
   useEffect(() => {
@@ -56,7 +56,13 @@ export function AppLayout() {
     );
   }
 
-  if (!appUser) return null;
+  if (!appUser) {
+    return (
+      <div className="p-8">
+        <Outlet />
+      </div>
+    );
+  }
 
   const items = navByRole[appUser.role];
 
@@ -104,7 +110,6 @@ export function AppLayout() {
       </nav>
     </>
   );
-
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-slate-50 via-white to-purple-50/30">
       {/* ── Desktop sidebar ── */}
