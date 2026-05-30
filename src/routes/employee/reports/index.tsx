@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 
 export const Route = createFileRoute(
-  "/employee/reports"
+  "/employee/reports/"
 )({
   component: EmployeeReportsPage,
 });
@@ -246,6 +246,10 @@ export default function EmployeeReportsPage() {
                 <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500">
                   Submitted
                 </th>
+
+                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  Actions
+                </th>
               </tr>
             </thead>
 
@@ -297,9 +301,18 @@ export default function EmployeeReportsPage() {
                   </td>
 
                   {/* DATE */}
-                  <td className="px-6 py-5 text-sm text-gray-500">
-                    {report.submittedAt}
-                  </td>
+                  <td className="px-6 py-5 text-sm text-gray-500"> {report.submittedAt}</td>
+
+                  {/* ACTIONS */}
+                  <td className="px-6 py-5">
+                    <Link
+                      to="/employee/reports/$reportId"
+                      params={{ reportId: report.id }}
+                      className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition inline-block"
+                    >
+                      Review
+                    </Link>
+                   </td>
                 </tr>
               ))}
             </tbody>

@@ -18,7 +18,6 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as EmployeeRouteRouteImport } from './routes/employee/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EmployeeIndexRouteImport } from './routes/employee/index'
-import { Route as EmployeeReportsRouteImport } from './routes/employee/reports'
 import { Route as EmployeeProgramsRouteImport } from './routes/employee/programs'
 import { Route as EmployeeProfileRouteImport } from './routes/employee/profile'
 import { Route as AppUsersRouteImport } from './routes/_app.users'
@@ -30,6 +29,8 @@ import { Route as AppManagerRouteImport } from './routes/_app.manager'
 import { Route as AppEmployeeRouteImport } from './routes/_app.employee'
 import { Route as AppAuditLogsRouteImport } from './routes/_app.audit-logs'
 import { Route as AppAdminRouteImport } from './routes/_app.admin'
+import { Route as EmployeeReportsIndexRouteImport } from './routes/employee/reports/index'
+import { Route as EmployeeReportsReportIdRouteImport } from './routes/employee/reports/$reportId'
 import { Route as AppReportsNewRouteImport } from './routes/_app.reports.new'
 import { Route as AppReportsReportIdRouteImport } from './routes/_app.reports.$reportId'
 
@@ -75,11 +76,6 @@ const IndexRoute = IndexRouteImport.update({
 const EmployeeIndexRoute = EmployeeIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => EmployeeRouteRoute,
-} as any)
-const EmployeeReportsRoute = EmployeeReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
   getParentRoute: () => EmployeeRouteRoute,
 } as any)
 const EmployeeProgramsRoute = EmployeeProgramsRouteImport.update({
@@ -137,6 +133,16 @@ const AppAdminRoute = AppAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AppRoute,
 } as any)
+const EmployeeReportsIndexRoute = EmployeeReportsIndexRouteImport.update({
+  id: '/reports/',
+  path: '/reports/',
+  getParentRoute: () => EmployeeRouteRoute,
+} as any)
+const EmployeeReportsReportIdRoute = EmployeeReportsReportIdRouteImport.update({
+  id: '/reports/$reportId',
+  path: '/reports/$reportId',
+  getParentRoute: () => EmployeeRouteRoute,
+} as any)
 const AppReportsNewRoute = AppReportsNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -166,10 +172,11 @@ export interface FileRoutesByFullPath {
   '/users': typeof AppUsersRoute
   '/employee/profile': typeof EmployeeProfileRoute
   '/employee/programs': typeof EmployeeProgramsRoute
-  '/employee/reports': typeof EmployeeReportsRoute
   '/employee/': typeof EmployeeIndexRoute
   '/reports/$reportId': typeof AppReportsReportIdRoute
   '/reports/new': typeof AppReportsNewRoute
+  '/employee/reports/$reportId': typeof EmployeeReportsReportIdRoute
+  '/employee/reports/': typeof EmployeeReportsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -189,9 +196,10 @@ export interface FileRoutesByTo {
   '/users': typeof AppUsersRoute
   '/employee/profile': typeof EmployeeProfileRoute
   '/employee/programs': typeof EmployeeProgramsRoute
-  '/employee/reports': typeof EmployeeReportsRoute
   '/reports/$reportId': typeof AppReportsReportIdRoute
   '/reports/new': typeof AppReportsNewRoute
+  '/employee/reports/$reportId': typeof EmployeeReportsReportIdRoute
+  '/employee/reports': typeof EmployeeReportsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -214,10 +222,11 @@ export interface FileRoutesById {
   '/_app/users': typeof AppUsersRoute
   '/employee/profile': typeof EmployeeProfileRoute
   '/employee/programs': typeof EmployeeProgramsRoute
-  '/employee/reports': typeof EmployeeReportsRoute
   '/employee/': typeof EmployeeIndexRoute
   '/_app/reports/$reportId': typeof AppReportsReportIdRoute
   '/_app/reports/new': typeof AppReportsNewRoute
+  '/employee/reports/$reportId': typeof EmployeeReportsReportIdRoute
+  '/employee/reports/': typeof EmployeeReportsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -239,10 +248,11 @@ export interface FileRouteTypes {
     | '/users'
     | '/employee/profile'
     | '/employee/programs'
-    | '/employee/reports'
     | '/employee/'
     | '/reports/$reportId'
     | '/reports/new'
+    | '/employee/reports/$reportId'
+    | '/employee/reports/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -262,9 +272,10 @@ export interface FileRouteTypes {
     | '/users'
     | '/employee/profile'
     | '/employee/programs'
-    | '/employee/reports'
     | '/reports/$reportId'
     | '/reports/new'
+    | '/employee/reports/$reportId'
+    | '/employee/reports'
   id:
     | '__root__'
     | '/'
@@ -286,10 +297,11 @@ export interface FileRouteTypes {
     | '/_app/users'
     | '/employee/profile'
     | '/employee/programs'
-    | '/employee/reports'
     | '/employee/'
     | '/_app/reports/$reportId'
     | '/_app/reports/new'
+    | '/employee/reports/$reportId'
+    | '/employee/reports/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -366,13 +378,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/employee/'
       preLoaderRoute: typeof EmployeeIndexRouteImport
-      parentRoute: typeof EmployeeRouteRoute
-    }
-    '/employee/reports': {
-      id: '/employee/reports'
-      path: '/reports'
-      fullPath: '/employee/reports'
-      preLoaderRoute: typeof EmployeeReportsRouteImport
       parentRoute: typeof EmployeeRouteRoute
     }
     '/employee/programs': {
@@ -452,6 +457,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminRouteImport
       parentRoute: typeof AppRoute
     }
+    '/employee/reports/': {
+      id: '/employee/reports/'
+      path: '/reports'
+      fullPath: '/employee/reports/'
+      preLoaderRoute: typeof EmployeeReportsIndexRouteImport
+      parentRoute: typeof EmployeeRouteRoute
+    }
+    '/employee/reports/$reportId': {
+      id: '/employee/reports/$reportId'
+      path: '/reports/$reportId'
+      fullPath: '/employee/reports/$reportId'
+      preLoaderRoute: typeof EmployeeReportsReportIdRouteImport
+      parentRoute: typeof EmployeeRouteRoute
+    }
     '/_app/reports/new': {
       id: '/_app/reports/new'
       path: '/new'
@@ -472,15 +491,17 @@ declare module '@tanstack/react-router' {
 interface EmployeeRouteRouteChildren {
   EmployeeProfileRoute: typeof EmployeeProfileRoute
   EmployeeProgramsRoute: typeof EmployeeProgramsRoute
-  EmployeeReportsRoute: typeof EmployeeReportsRoute
   EmployeeIndexRoute: typeof EmployeeIndexRoute
+  EmployeeReportsReportIdRoute: typeof EmployeeReportsReportIdRoute
+  EmployeeReportsIndexRoute: typeof EmployeeReportsIndexRoute
 }
 
 const EmployeeRouteRouteChildren: EmployeeRouteRouteChildren = {
   EmployeeProfileRoute: EmployeeProfileRoute,
   EmployeeProgramsRoute: EmployeeProgramsRoute,
-  EmployeeReportsRoute: EmployeeReportsRoute,
   EmployeeIndexRoute: EmployeeIndexRoute,
+  EmployeeReportsReportIdRoute: EmployeeReportsReportIdRoute,
+  EmployeeReportsIndexRoute: EmployeeReportsIndexRoute,
 }
 
 const EmployeeRouteRouteWithChildren = EmployeeRouteRoute._addFileChildren(
